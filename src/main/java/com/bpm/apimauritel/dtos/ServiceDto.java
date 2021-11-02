@@ -8,4 +8,6 @@ public class ServiceDto {
 	private String Service;
 	private double Amount;
 	private String Description;
+	
+	
 }

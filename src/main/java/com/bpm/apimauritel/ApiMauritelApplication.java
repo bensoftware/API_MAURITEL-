@@ -21,9 +21,19 @@ public class ApiMauritelApplication implements ApplicationRunner {
 	@Override
 	public void run(ApplicationArguments args) throws Exception {
 		// TODO Auto-generated method stub
-	//	UserDto user=new UserDto();
+	   //	UserDto user=new UserDto();
 		
-		System.err.println("Utilisateur DTO : "+rechargeService.checkStatus());
+		//System.err.println("Utilisateur DTO : "+rechargeService.checkStatus());
+		
+		UserDto userDto =new UserDto();
+		userDto.setUsername("admin");
+		userDto.setPassword("Admin1234");
+		
+		
+		//System.err.println("Utilisateur DTO : "+rechargeService.authentication(userDto));
+		
+
+		System.err.println("List of  : "+rechargeService.getMarketingService(rechargeService.authentication(userDto)));
 	}
 	
 }
