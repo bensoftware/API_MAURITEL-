@@ -18,6 +18,7 @@ public interface RechargeService {
 
 	public ResponseRechargeDto rechargeParServiceMarketing(RechargeMarketingDto rechargeMarketingDto) throws Exception;;
 
-	public ResponseRechargeDto rechargeClassique(RechargeClassiqueDto rechargeClassiqueDto) throws Exception;;
-
+	public ResponseRechargeDto rechargeClassique(RechargeClassiqueDto rechargeClassiqueDto) throws Exception;
+	
+	public ServiceDto[] getMarketingServiceArray(TokenDto tokenDto) throws Exception;
 }

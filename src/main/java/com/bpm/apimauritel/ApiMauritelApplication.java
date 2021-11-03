@@ -1,10 +1,15 @@
 package com.bpm.apimauritel;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+
+import com.bpm.apimauritel.dtos.ServiceDto;
 import com.bpm.apimauritel.dtos.UserDto;
 import com.bpm.apimauritel.services.RechargeService;
 
@@ -32,8 +37,12 @@ public class ApiMauritelApplication implements ApplicationRunner {
 		
 		//System.err.println("Utilisateur DTO : "+rechargeService.authentication(userDto));
 		
-
-		System.err.println("List of  : "+rechargeService.getMarketingService(rechargeService.authentication(userDto)));
+		 List<ServiceDto> serviceDytoArray=new  ArrayList<>();
+		 
+		rechargeService.getMarketingServiceArray(rechargeService.authentication(userDto));
+		//System.err.println("List of  : "+rechargeService.getMarketingServiceArray(rechargeService.authentication(userDto)));
+		
+		
 	}
 	
 }
