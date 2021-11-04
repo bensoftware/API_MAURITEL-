@@ -1,7 +1,6 @@
 package com.bpm.apimauritel.entities;
 
 import java.io.Serializable;
-
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -12,15 +11,16 @@ import lombok.Data;
 
 @Data
 @Entity
-public class DetailService implements Serializable{
-	  /**
-	 * 
-	 */
+public class DetailService implements Serializable {
+
 	private static final long serialVersionUID = 1L;
+
+	@GeneratedValue(strategy = GenerationType.AUTO)
 	@Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @ManyToOne(fetch = FetchType.LAZY)
-    private Service service;
+	private Long id;
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	private Service service;
 	private double amount;
 	private String description;
 }

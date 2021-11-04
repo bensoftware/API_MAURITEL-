@@ -6,5 +6,5 @@ import lombok.Data;
 public class RechargeClassiqueDto {
 	private String sender;
 	private String receiver;
-	private double amount;
+	private String amount;
 }
