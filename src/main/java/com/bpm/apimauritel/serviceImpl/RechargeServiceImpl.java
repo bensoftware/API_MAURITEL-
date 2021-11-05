@@ -23,6 +23,7 @@ import com.bpm.apimauritel.dtos.ResponseRechargeDto;
 import com.bpm.apimauritel.dtos.ServiceDto;
 import com.bpm.apimauritel.dtos.TokenDto;
 import com.bpm.apimauritel.dtos.UserDto;
+import com.bpm.apimauritel.securities.JWT;
 import com.bpm.apimauritel.services.RechargeService;
 
 @Service
@@ -35,6 +36,13 @@ public class RechargeServiceImpl implements RechargeService {
 	
 	@Value("${host.mauritel}")
     public String host;
+
+	@Value("${username}")
+    public String username;
+	
+	@Value("${password}")
+    public String password;
+	
 
 	@Override
 	public String checkStatus() throws Exception {
@@ -123,6 +131,16 @@ public class RechargeServiceImpl implements RechargeService {
 	@Override
 	public ResponseRechargeDto rechargeParServiceMarketing(RechargeMarketingDto rechargeMarketingDto,TokenDto tokenDto) throws Exception {
 		// TODO Auto-generated method stub
+		
+		
+		//Has to be done in the controller level
+		if(!JWT.iSJwtTimeValid(tokenDto.getToken())){
+			UserDto userDto =new UserDto();
+			userDto.setUsername(username);
+			userDto.setPassword(password);
+			tokenDto=authentication(userDto);
+		}
+		
 		
 		HttpHeaders headers= new HttpHeaders();
 		headers.setContentType(MediaType.APPLICATION_JSON);		

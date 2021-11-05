@@ -1,6 +1,7 @@
 package com.bpm.apimauritel.securities;
 
 import java.io.IOException;
+import java.util.Date;
 import java.util.Map;
 import org.apache.commons.codec.binary.Base64;
 import com.bpm.apimauritel.dtos.TokenDto;
@@ -33,6 +34,13 @@ public class JWT {
 		}
 		return map.get("exp");
 
+	}
+
+	public static boolean iSJwtTimeValid(String exp) {
+		if(Long.parseLong(exp) <new  Date().getTime()/1000){
+			return true;
+		}
+		return false;
 	}
 	
 
