@@ -8,9 +8,6 @@ import com.bpm.apimauritel.dtos.TokenDto;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class JWT {
-
-
-	
 	
 	public static int getExpirationTime(TokenDto tokenDto) {
 
@@ -36,8 +33,11 @@ public class JWT {
 
 	}
 
-	public static boolean iSJwtTimeValid(String exp) {
-		if(Long.parseLong(exp) <new  Date().getTime()/1000){
+	public static boolean iSJwtTimeValid(int exp) {
+		
+		//System.err.println("hummm"+exp);
+		
+		if(exp <new  Date().getTime()/1000){
 			return true;
 		}
 		return false;

@@ -115,11 +115,7 @@
 		<!-- <dependency> <groupId>sftp.driver</groupId> <artifactId>sftp</artifactId> 
 			<version>1.0.0</version> </dependency> -->
 
-		<dependency>
-			<groupId>jcifs.driver</groupId>
-			<artifactId>jcifs</artifactId>
-			<version>1.0.0</version>
-		</dependency>
+		
 
 		<dependency>
 			<groupId>commons-net</groupId>
@@ -133,12 +129,7 @@
 			<version>2.6</version>
 		</dependency>
 
-		<dependency>
-			<groupId>security.driver</groupId>
-			<artifactId>security</artifactId>
-			<version>1.0.0</version>
-		</dependency>
-
+	
 
 		<!-- https://mvnrepository.com/artifact/org.apache.httpcomponents/httpclient -->
 		<dependency>

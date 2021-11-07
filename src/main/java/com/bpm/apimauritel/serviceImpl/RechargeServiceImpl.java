@@ -116,7 +116,6 @@ public class RechargeServiceImpl implements RechargeService {
 						for(Object x : list) {
 							Map<String, String> map= (Map<String,String>) x;
 							serviceDtos.add(new ServiceDto(map.get("Service"), map.get("CodeOperation"), map.get("Description"), map.get("Amount")));
-							
 						}
 					}	
 				}
@@ -130,11 +129,8 @@ public class RechargeServiceImpl implements RechargeService {
 	
 	@Override
 	public ResponseRechargeDto rechargeParServiceMarketing(RechargeMarketingDto rechargeMarketingDto,TokenDto tokenDto) throws Exception {
-		// TODO Auto-generated method stub
-		
-		
 		//Has to be done in the controller level
-		if(!JWT.iSJwtTimeValid(tokenDto.getToken())){
+		if(!JWT.iSJwtTimeValid(JWT.getExpirationTime(tokenDto))){
 			UserDto userDto =new UserDto();
 			userDto.setUsername(username);
 			userDto.setPassword(password);

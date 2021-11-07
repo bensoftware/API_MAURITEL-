@@ -14,6 +14,7 @@ public class ServiceDto implements Serializable {
 	private String CodeOperation;
 	private String Description;
 	private String Amount;
+	
 	public ServiceDto(String service, String codeOperation, String description, String amount) {
 		super();
 		Service = service;

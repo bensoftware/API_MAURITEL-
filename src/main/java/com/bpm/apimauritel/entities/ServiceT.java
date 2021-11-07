@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -12,7 +13,7 @@ import lombok.Data;
 
 @Data
 @Entity
-public class Service implements Serializable {
+public class ServiceT implements Serializable {
 
 	  private static final long serialVersionUID = 1L;
 	  
@@ -20,7 +21,7 @@ public class Service implements Serializable {
 	  @GeneratedValue(strategy = GenerationType.AUTO)
 	  @Id
 	  private Long id;
-	  @OneToMany(mappedBy = "service", cascade = CascadeType.ALL, orphanRemoval = true)
+	  @OneToMany(mappedBy = "service",fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
 	  List<DetailService>  detailServices;
 	  private String codeService;
 	  private String codeOperation;

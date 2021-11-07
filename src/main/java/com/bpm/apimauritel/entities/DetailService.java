@@ -2,12 +2,17 @@ package com.bpm.apimauritel.entities;
 
 import java.io.Serializable;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import org.hibernate.annotations.Cascade;
+import org.hibernate.annotations.CascadeType;
+
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 
 @Data
 @Entity
@@ -19,8 +24,14 @@ public class DetailService implements Serializable {
 	@Id
 	private Long id;
 
-	@ManyToOne(fetch = FetchType.LAZY)
-	private Service service;
-	private double amount;
+	@ToString.Exclude
+	@ManyToOne
+	@Cascade(CascadeType.SAVE_UPDATE)
+	// @JoinColumn(name = "detailService_id")
+	private ServiceT service;
+	private String amount;
 	private String description;
+
+	
+
 }

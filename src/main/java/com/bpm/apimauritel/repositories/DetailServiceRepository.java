@@ -7,4 +7,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 @Repository
 public interface  DetailServiceRepository extends JpaRepository<DetailService,Long>{
+
+	public DetailService findDetailServiceByDescription(String description) ;
 }
