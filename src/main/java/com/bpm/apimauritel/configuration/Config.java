@@ -14,6 +14,12 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.http.client.SimpleClientHttpRequestFactory;
 import org.springframework.web.client.RestTemplate;
+import com.bpm.apimauritel.messages.Message;
+import io.swagger.v3.oas.models.Components;
+import io.swagger.v3.oas.models.OpenAPI;
+import io.swagger.v3.oas.models.info.Info;
+import io.swagger.v3.oas.models.security.SecurityRequirement;
+import io.swagger.v3.oas.models.security.SecurityScheme;
 
 @Configuration
 public class Config {
@@ -38,6 +44,16 @@ public class Config {
 		requestFactory.setHttpClient(httpClient);
 		RestTemplate restTemplate = new RestTemplate(requestFactory);
 		return restTemplate;
+	}
+
+	@Bean
+	public OpenAPI customOpenAPI() {
+		return new OpenAPI()
+				.info(new Info().title(Message.DOC_API_NAME).version(Message.VERSION)
+						.description(Message.DOC_API_DESCRIPTION))
+				.addSecurityItem(new SecurityRequirement().addList(Message.SECURITY_SCHEME))
+				.components(new Components().addSecuritySchemes(Message.SECURITY_SCHEME, new SecurityScheme()
+						.name(Message.SECURITY_SCHEME).type(SecurityScheme.Type.HTTP).scheme(Message.SCHEME)));
 	}
 
 }
