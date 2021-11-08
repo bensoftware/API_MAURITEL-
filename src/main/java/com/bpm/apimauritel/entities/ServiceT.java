@@ -16,7 +16,6 @@ import lombok.Data;
 public class ServiceT implements Serializable {
 
 	  private static final long serialVersionUID = 1L;
-	  
 	 
 	  @GeneratedValue(strategy = GenerationType.AUTO)
 	  @Id

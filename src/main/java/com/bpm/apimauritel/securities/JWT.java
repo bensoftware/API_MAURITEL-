@@ -30,13 +30,10 @@ public class JWT {
 			e.printStackTrace();
 		}
 		return map.get("exp");
-
 	}
 
+	
 	public static boolean iSJwtTimeValid(int exp) {
-		
-		//System.err.println("hummm"+exp);
-		
 		if(exp <new  Date().getTime()/1000){
 			return true;
 		}
@@ -71,4 +68,5 @@ public class JWT {
 		}
 		System.out.println(map.get("exp"));
 	}
+	
 }

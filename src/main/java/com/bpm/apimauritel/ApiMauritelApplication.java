@@ -9,7 +9,6 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import com.bpm.apimauritel.dtos.ServiceDto;
 import com.bpm.apimauritel.dtos.TokenDto;
-import com.bpm.apimauritel.dtos.UserDto;
 import com.bpm.apimauritel.entities.DetailService;
 import com.bpm.apimauritel.entities.ServiceT;
 import com.bpm.apimauritel.securities.JWT;
@@ -44,11 +43,7 @@ public class ApiMauritelApplication implements ApplicationRunner {
 
 		// System.err.println("Utilisateur DTO : "+rechargeService.checkStatus());
 
-		UserDto userDto = new UserDto();
-		userDto.setUsername("admin");
-		userDto.setPassword("Admin1234");
-
-		TokenDto token = rechargeService.authentication(userDto);
+		TokenDto token = rechargeService.authentication();
 		// System.err.println("Utilisateur DTO :
 		// "+rechargeService.authentication(userDto));
 
@@ -87,7 +82,7 @@ public class ApiMauritelApplication implements ApplicationRunner {
 		jwt.testDecodeJWT(token);
 
 		int G = JWT.getExpirationTime(token);
-		System.err.println("Response : " + serviceService.getAllServices());
+		 System.err.println("Response : " + serviceService.getAllServices());
 
 		List<DetailService> listDetailService = new ArrayList<>();
 
@@ -108,8 +103,8 @@ public class ApiMauritelApplication implements ApplicationRunner {
 		// System.err.println("Service "+serviceT);
 
 		// detailServiceService.save(detailService);
-		
-		cashService.saveService();
+
+		// cashService.saveService();
 
 	}
 

@@ -12,12 +12,12 @@ public interface RechargeService {
 
 	public String checkStatus() throws Exception;
 
-	public TokenDto authentication(UserDto usrDto) throws Exception;
+	public TokenDto authentication() throws Exception;
 
-	public ResponseRechargeDto rechargeClassique(RechargeClassiqueDto rechargeClassiqueDto,TokenDto tokenDto) throws Exception;
+	public ResponseRechargeDto rechargeClassique(RechargeClassiqueDto rechargeClassiqueDto ) throws Exception;
 	
-	public ResponseRechargeDto rechargeParServiceMarketing(RechargeMarketingDto rechargeMarketingDto,TokenDto tokenDto) throws Exception;
+	public ResponseRechargeDto rechargeParServiceMarketing(RechargeMarketingDto rechargeMarketingDto) throws Exception;
 	
-	public List<ServiceDto> getMarketingServices(TokenDto tokenDto) throws Exception;
+	public List<ServiceDto> getMarketingServices() throws Exception;
 	
 }

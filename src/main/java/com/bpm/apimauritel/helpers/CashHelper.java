@@ -1,7 +1,6 @@
 package com.bpm.apimauritel.helpers;
 
 import java.util.List;
-
 import com.bpm.apimauritel.dtos.ServiceDto;
 import com.bpm.apimauritel.entities.DetailService;
 import com.bpm.apimauritel.entities.ServiceT;
@@ -9,12 +8,11 @@ import com.bpm.apimauritel.services.DetailServiceService;
 
 public class CashHelper {
 
-	
 	public static void  SaveDetailService(ServiceT serviceT,List<ServiceDto> listService,DetailServiceService detailServiceService) throws Exception {
 		
 		 DetailService detailService=null;
 			for(ServiceDto serviceDto : listService) {
-				System.err.println("");
+				//System.err.println("");
 				if(serviceDto.getService().equalsIgnoreCase(serviceT.getCodeService())) {
 					 detailService =new DetailService();
 					 detailService.setAmount(serviceDto.getAmount());
@@ -26,13 +24,11 @@ public class CashHelper {
 						 }else{
 							 // logger.info('');
 						 }
-					} catch (Exception e) {
+					}catch (Exception e) {
 						throw new Exception(e.getMessage());
 					}
 				}
-				
-				// listDetailService.add(detailService);
 			}
-			
 	}
+	
 }

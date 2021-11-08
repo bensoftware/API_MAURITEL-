@@ -16,13 +16,13 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
-
 import com.bpm.apimauritel.dtos.RechargeClassiqueDto;
 import com.bpm.apimauritel.dtos.RechargeMarketingDto;
 import com.bpm.apimauritel.dtos.ResponseRechargeDto;
 import com.bpm.apimauritel.dtos.ServiceDto;
 import com.bpm.apimauritel.dtos.TokenDto;
 import com.bpm.apimauritel.dtos.UserDto;
+import com.bpm.apimauritel.helpers.RechargeServiceHelper;
 import com.bpm.apimauritel.securities.JWT;
 import com.bpm.apimauritel.services.RechargeService;
 
@@ -30,95 +30,98 @@ import com.bpm.apimauritel.services.RechargeService;
 public class RechargeServiceImpl implements RechargeService {
 
 	public final Logger logger = LoggerFactory.getLogger(RechargeServiceImpl.class);
-	
+
 	@Autowired
 	public RestTemplate restTemplate;
-	
+
 	@Value("${host.mauritel}")
-    public String host;
+	public String host;
 
 	@Value("${username}")
-    public String username;
-	
+	public String username;
+
 	@Value("${password}")
-    public String password;
-	
+	public String password;
+
+	public TokenDto token;
 
 	@Override
 	public String checkStatus() throws Exception {
 		// TODO Auto-generated method stub
-		final String baseUrl = host +"/"+"/bm/api/check";
-		ResponseEntity<String> response=null;
-		String result="";
+		final String baseUrl = host + "/" + "/bm/api/check";
+		ResponseEntity<String> response = null;
+		String result = "";
 		try {
-		   response=restTemplate.exchange(baseUrl,HttpMethod.GET,null,String.class);
-		   if(response.getStatusCode()==HttpStatus.OK){
-			   return response.getBody();
-		   }
+			response = restTemplate.exchange(baseUrl, HttpMethod.GET, null, String.class);
+			if (response.getStatusCode() == HttpStatus.OK) {
+				return response.getBody();
+			}
 		} catch (Exception e) {
 			// TODO: handle exception
 			throw new Exception(e.getMessage());
 		}
-		  return response.getBody();
+		return response.getBody();
 	}
-	
+
 	
 	@Override
-	public TokenDto authentication(UserDto userDto) throws Exception{
+	public TokenDto authentication() throws Exception {
 		// TODO Auto-generated method stub
-		String url=host+"/"+"bm/authenticate";
-	    TokenDto token =new TokenDto();
-	    
+
+		UserDto userDto = new UserDto(username, password);
+
+		String url = host + "/" + "bm/authenticate";
+
 		HttpHeaders headers = new HttpHeaders();
 		headers.setContentType(MediaType.APPLICATION_JSON);
-		
-		HttpEntity<UserDto> request = new HttpEntity<>(userDto,headers);
-		
+
+		HttpEntity<UserDto> request = new HttpEntity<>(userDto, headers);
+
 		try {
-			ResponseEntity<TokenDto> response = restTemplate.postForEntity(url,request,TokenDto.class);
-			if(response.getStatusCode()==HttpStatus.OK){
-				if(response.getBody()!=null) {
-					token=response.getBody();
-					logger.info("TOKEN : " +token);
+			ResponseEntity<TokenDto> response = restTemplate.postForEntity(url, request, TokenDto.class);
+			if (response.getStatusCode() == HttpStatus.OK) {
+				if (response.getBody() != null) {
+					token = response.getBody();
+					logger.info("TOKEN : " + token);
 				}
-				return token;
 			}
-		}catch (Exception e) {
+		} catch (Exception e) {
 			// TODO: handle exception
-			throw new Exception("Exception when calling MAURITEL API : "+e.getMessage());
+			throw new Exception("Exception when calling MAURITEL API : " + e.getMessage());
 		}
 		return token;
 	}
 	
-	
+
 	@Override
-	public List<ServiceDto> getMarketingServices(TokenDto tokenDto) throws Exception {
+	public List<ServiceDto> getMarketingServices() throws Exception {
 		// TODO Auto-generated method stub
-		HttpHeaders headers= new HttpHeaders();
-		headers.setContentType(MediaType.APPLICATION_JSON);		
-		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
-		headers.set("Authorization","Bearer " + tokenDto.getToken());
-		
+
+		if (!JWT.iSJwtTimeValid(JWT.getExpirationTime(this.token))) {
+			token = authentication();
+		}
+
+		HttpHeaders headers = RechargeServiceHelper.getHeaders(this.token);
+
 		HttpEntity<String> entete = new HttpEntity<>(headers);
-		
-		System.err.println("TOKEN TO BE SEND : "  + "Bearer " + tokenDto.getToken());
-		
-		String URL=host+"/"+"bm/api/services";
-		List<ServiceDto> serviceDtos= new ArrayList<>();
+
+		System.err.println("TOKEN TO BE SEND : " + "Bearer " + token.getToken());
+
+		String URL = host + "/" + "bm/api/services";
+		List<ServiceDto> serviceDtos = new ArrayList<>();
 		try {
-			 ResponseEntity<Object> response = restTemplate.exchange(URL,HttpMethod.GET,entete,Object.class);
-				
-				if(response.getStatusCode()==HttpStatus.OK){
-					if(response.getBody()!=null ) {
-						
-						List<Object> list = (List<Object>)response.getBody();
-						
-						for(Object x : list) {
-							Map<String, String> map= (Map<String,String>) x;
-							serviceDtos.add(new ServiceDto(map.get("Service"), map.get("CodeOperation"), map.get("Description"), map.get("Amount")));
-						}
-					}	
+			ResponseEntity<Object> response = restTemplate.exchange(URL, HttpMethod.GET, entete, Object.class);
+			if (response.getStatusCode() == HttpStatus.OK) {
+				if (response.getBody() != null) {
+					List<Object> list = (List<Object>) response.getBody();
+
+					for (Object x : list) {
+						Map<String, String> map = (Map<String, String>) x;
+						serviceDtos.add(new ServiceDto(map.get("Service"), map.get("CodeOperation"),
+								map.get("Description"), map.get("Amount")));
+					}
 				}
+			}
 		} catch (Exception e) {
 			throw new Exception(e.getMessage());
 		}
@@ -126,38 +129,27 @@ public class RechargeServiceImpl implements RechargeService {
 	}
 
 	
-	
 	@Override
-	public ResponseRechargeDto rechargeParServiceMarketing(RechargeMarketingDto rechargeMarketingDto,TokenDto tokenDto) throws Exception {
-		//Has to be done in the controller level
-		if(!JWT.iSJwtTimeValid(JWT.getExpirationTime(tokenDto))){
-			UserDto userDto =new UserDto();
-			userDto.setUsername(username);
-			userDto.setPassword(password);
-			tokenDto=authentication(userDto);
+	public ResponseRechargeDto rechargeParServiceMarketing(RechargeMarketingDto rechargeMarketingDto) throws Exception {
+		// Has to be done in the controller level
+		if (!JWT.iSJwtTimeValid(JWT.getExpirationTime(this.token))) {
+			token = authentication();
 		}
-		
-		
-		HttpHeaders headers= new HttpHeaders();
-		headers.setContentType(MediaType.APPLICATION_JSON);		
-		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
-		headers.set("Authorization","Bearer " + tokenDto.getToken());
-		
+
+		HttpHeaders headers = RechargeServiceHelper.getHeaders(this.token);
+
 		HttpEntity<String> entete = new HttpEntity<>(headers);
-		
-		Map<String, String> params = new HashMap();
-		params.put("sender", rechargeMarketingDto.getSender());
-		params.put("receiver",rechargeMarketingDto.getReceiver());
-		params.put("amount", rechargeMarketingDto.getAmount());
-		params.put("service", rechargeMarketingDto.getService());
-		
-		String URL=host+"/bm/api/recharge/";
-		
-		ResponseRechargeDto rechargeDto=new ResponseRechargeDto();
+
+		Map<String, String> params = RechargeServiceHelper.getParametters(rechargeMarketingDto);
+
+		String URL = host + "/bm/api/recharge/";
+
+		ResponseRechargeDto rechargeDto = new ResponseRechargeDto();
 		try {
-			HttpEntity<ResponseRechargeDto> response = restTemplate.exchange(URL, HttpMethod.GET, entete, ResponseRechargeDto.class, params);
-			if(response.getBody()!=null) {
-				rechargeDto=response.getBody();
+			HttpEntity<ResponseRechargeDto> response = restTemplate.exchange(URL, HttpMethod.GET, entete,
+					ResponseRechargeDto.class, params);
+			if (response.getBody() != null) {
+				rechargeDto = response.getBody();
 			}
 		} catch (Exception e) {
 			// TODO: handle exception
@@ -168,29 +160,27 @@ public class RechargeServiceImpl implements RechargeService {
 
 	
 	@Override
-	public ResponseRechargeDto rechargeClassique(RechargeClassiqueDto rechargeClassiqueDto,TokenDto tokenDto) throws Exception {
+	public ResponseRechargeDto rechargeClassique(RechargeClassiqueDto rechargeClassiqueDto) throws Exception {
 		// TODO Auto-generated method stub
-		HttpHeaders headers= new HttpHeaders();
-		headers.setContentType(MediaType.APPLICATION_JSON);		
-		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
-		headers.set("Authorization","Bearer " + tokenDto.getToken());
-		
+		if (!JWT.iSJwtTimeValid(JWT.getExpirationTime(this.token))) {
+			token = authentication();
+		}
+		HttpHeaders headers = RechargeServiceHelper.getHeaders(this.token);
+
 		HttpEntity<String> entete = new HttpEntity<>(headers);
-		
-		Map<String, String> params = new HashMap<String, String>();
-		
-		params.put("sender", rechargeClassiqueDto.getSender());
-		params.put("receiver",rechargeClassiqueDto.getReceiver());
-		params.put("amount", rechargeClassiqueDto.getAmount());
-		
-		
-		String URL=host+"/bm/api/recharge/";
-		
-		ResponseRechargeDto rechargeDto=new ResponseRechargeDto();
+
+		Map<String, String> params = RechargeServiceHelper.getParamettersRechargeClassique(rechargeClassiqueDto);
+
+		String URL = host + "/bm/api/recharge/";
+
+		ResponseRechargeDto rechargeDto = new ResponseRechargeDto();
+
 		try {
-			HttpEntity<ResponseRechargeDto> response = restTemplate.exchange(URL, HttpMethod.GET, entete, ResponseRechargeDto.class, params);
-			if(response.getBody()!=null) {
-				rechargeDto=response.getBody();
+			HttpEntity<ResponseRechargeDto> response = restTemplate.exchange(URL, HttpMethod.GET, entete,
+					ResponseRechargeDto.class, params);
+			if (response.getBody() != null) {
+				rechargeDto = response.getBody();
+				System.err.println("Service rechargeClassique : " + rechargeDto);
 			}
 		} catch (Exception e) {
 			// TODO: handle exception
@@ -198,5 +188,6 @@ public class RechargeServiceImpl implements RechargeService {
 		}
 		return rechargeDto;
 	}
+	
 
 }
