@@ -82,7 +82,8 @@ public class ApiMauritelApplication implements ApplicationRunner {
 		jwt.testDecodeJWT(token);
 
 		int G = JWT.getExpirationTime(token);
-		 System.err.println("Response : " + serviceService.getAllServices());
+		
+//------------ System.err.println("Response : " + serviceService.getAllServices());
 
 		List<DetailService> listDetailService = new ArrayList<>();
 
@@ -98,6 +99,7 @@ public class ApiMauritelApplication implements ApplicationRunner {
 		s.setCodeService("9");
 		s.setDetailServices(listDetailService);
 
+	//System.err.println("DetailService : "+detailServiceService.findDetailServiceByIdService(40L));
 		// ServiceT serviceT= serviceService.save(s);
 
 		// System.err.println("Service "+serviceT);

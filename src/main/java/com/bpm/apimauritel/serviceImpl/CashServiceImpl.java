@@ -39,7 +39,7 @@ public class CashServiceImpl implements CashService {
 		Hashtable<String, String> serviceSaved = new Hashtable<>();
 
 		for (ServiceDto serviceDto : listService) {
-			// Also check in the Database
+			// Also check in the Database if it exists
 			if (!serviceSaved.contains(serviceDto.getService())) {
 				serviceT = new ServiceT();
 				serviceT.setCodeOperation(serviceDto.getCodeOperation());

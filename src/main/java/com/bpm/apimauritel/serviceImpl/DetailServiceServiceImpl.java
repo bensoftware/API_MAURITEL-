@@ -39,4 +39,10 @@ public class DetailServiceServiceImpl implements DetailServiceService {
 		return detailServiceRepository.findDetailServiceByDescription(description);
 	}
 
+	@Override
+	public DetailService findDetailServiceByIdService(Long idService) throws Exception {
+		// TODO Auto-generated method stub
+		return detailServiceRepository.getDetailServiceByIdService(idService);
+	}
+
 }

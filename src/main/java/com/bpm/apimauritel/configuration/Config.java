@@ -50,10 +50,10 @@ public class Config {
 	public OpenAPI customOpenAPI() {
 		return new OpenAPI()
 				.info(new Info().title(Message.DOC_API_NAME).version(Message.VERSION)
-						.description(Message.DOC_API_DESCRIPTION))
+				.description(Message.DOC_API_DESCRIPTION))
 				.addSecurityItem(new SecurityRequirement().addList(Message.SECURITY_SCHEME))
 				.components(new Components().addSecuritySchemes(Message.SECURITY_SCHEME, new SecurityScheme()
-						.name(Message.SECURITY_SCHEME).type(SecurityScheme.Type.HTTP).scheme(Message.SCHEME)));
+				.name(Message.SECURITY_SCHEME).type(SecurityScheme.Type.HTTP).scheme(Message.SCHEME)));
 	}
 
 }
