@@ -18,6 +18,6 @@ public class RechargeClassiqueDto {
 	@Size(min=8)
 	@Size(max=8)
 	private String receiver;
-	@Schema(description = "Amout to be sent.",example = "350", required = true)
+	@Schema(description = "Amount to be sent.",example = "350", required = true)
 	private String amount;
 }

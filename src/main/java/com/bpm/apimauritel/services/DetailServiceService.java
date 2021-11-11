@@ -1,10 +1,24 @@
 package com.bpm.apimauritel.services;
 
+import java.util.List;
+
 import com.bpm.apimauritel.entities.DetailService;
+import com.bpm.apimauritel.entities.ServiceT;
 
 public interface DetailServiceService {	
+	
 	public void save(DetailService detailService) throws Exception;
+	
 	public void update(DetailService detailService) throws Exception;
+	
 	public DetailService findDetailServiceByDescription(String description) throws Exception;
-	public DetailService findDetailServiceByIdService(Long idService) throws Exception;
+	
+	public  List<DetailService> findByService(ServiceT serviceT) throws Exception;
+	
+   public  List<DetailService>  findDetailServiceByAmount(String amount) throws Exception;
+	
+	
+	public  List<DetailService>  getDetailServiceByAmountAndIdService(String amount,ServiceT serviceT) throws Exception;
+	
+	
 }

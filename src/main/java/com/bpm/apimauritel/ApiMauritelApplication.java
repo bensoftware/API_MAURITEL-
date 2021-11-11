@@ -83,7 +83,8 @@ public class ApiMauritelApplication implements ApplicationRunner {
 
 		int G = JWT.getExpirationTime(token);
 		
-//------------ System.err.println("Response : " + serviceService.getAllServices());
+    
+	//System.err.println("Response : " + serviceService.getAllServices());
 
 		List<DetailService> listDetailService = new ArrayList<>();
 
@@ -95,11 +96,13 @@ public class ApiMauritelApplication implements ApplicationRunner {
 		listDetailService.add(detailService);
 
 		ServiceT s = new ServiceT();
-		s.setCodeOperation("1");
-		s.setCodeService("9");
-		s.setDetailServices(listDetailService);
+		s.setId(40L);
+		//s.setCodeOperation("1");
+	   // s.setCodeService("9");
+		  s.setDetailServices(listDetailService);
 
-	//System.err.println("DetailService : "+detailServiceService.findDetailServiceByIdService(40L));
+	//    System.err.println("DetailService : "+detailServiceService.findByService(s));
+		  
 		// ServiceT serviceT= serviceService.save(s);
 
 		// System.err.println("Service "+serviceT);
@@ -108,6 +111,24 @@ public class ApiMauritelApplication implements ApplicationRunner {
 
 		// cashService.saveService();
 
+		List<ServiceT>  listServiceT=serviceService.getAllServices();
+		
+		List<ServiceT>  newListService=new ArrayList<>();
+		
+		String amountT="200";
+		for (ServiceT serviceT : listServiceT) {
+			List<DetailService> listDetailServices=new ArrayList<>();
+			listDetailServices=serviceT.getDetailServices();
+				for (DetailService detailServiceT : listDetailServices) {
+					if(detailServiceT.getAmount().equals(amountT)){
+						//
+					serviceT.setDetailServices(detailServiceService.getDetailServiceByAmountAndIdService(amountT,serviceT));
+					newListService.add(serviceT);
+					}
+				}
+				listDetailServices.clear();
+		}
+		System.err.println("Liste Filtered" +newListService);  
 	}
 
 }

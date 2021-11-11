@@ -1,18 +1,26 @@
 package com.bpm.apimauritel.api;
 
+import java.util.ArrayList;
+import java.util.List;
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import com.bpm.apimauritel.dtos.RechargeClassiqueDto;
 import com.bpm.apimauritel.dtos.ResponseDto;
 import com.bpm.apimauritel.dtos.ResponseRechargeDto;
+import com.bpm.apimauritel.entities.DetailService;
+import com.bpm.apimauritel.entities.ServiceT;
+import com.bpm.apimauritel.services.DetailServiceService;
 import com.bpm.apimauritel.services.RechargeService;
 import com.bpm.apimauritel.services.ServiceService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -21,34 +29,58 @@ import io.swagger.v3.oas.annotations.Operation;
 @CrossOrigin("*")
 public class MauritelApi {
 
+	private final Logger logger = LoggerFactory.getLogger(MauritelApi.class);
+
+	@Autowired
+	HttpServletRequest httpServletRequest;
+
 	@Autowired
 	ServiceService serviceService;
 
 	@Autowired
 	RechargeService rechargeService;
 
+	@Autowired
+	DetailServiceService detailServiceService;
+
 	@RequestMapping(value = "/", produces = { "application/json" }, method = RequestMethod.GET)
 	public String Welcome() {
 		return "MAURITEL API is UP";
 	}
 
-	@Operation(summary ="BPM ***Get all services ")
+	@Operation(summary = "BPM ***Get all services ")
 	@RequestMapping(value = "/getAllMargetingService", produces = { "application/json" }, method = RequestMethod.GET)
 	public @ResponseBody ResponseDto getAllMargetingService() throws Exception {
 		return new ResponseDto(serviceService.getAllServices());
 	}
-	
-	@Operation(summary ="BPM ***Get Detail Service ")
-	@RequestMapping(value = "/getDetailService/{idService}", produces = { "application/json" }, method = RequestMethod.GET)
-	public @ResponseBody ResponseDto getDetailService(@PathVariable String idService) throws Exception {
-		return null;
+
+	@RequestMapping(value = "/getDetailServices/", produces = { "application/json" }, method = RequestMethod.GET)
+	public ResponseDto getDetailServicesByIdService(@RequestParam(name = "idService", required = true) Long idService)
+			throws Exception {
+
+		logger.info("GET DETAIL SERVICE IN : " + idService.longValue());
+
+		ServiceT serviceT = new ServiceT();
+		serviceT.setId(idService);
+
+		List<DetailService> listDetailServices = new ArrayList<>();
+		try {
+			listDetailServices = detailServiceService.findByService(serviceT);
+			logger.info("LISTE DES DETAILS SERVICE OU TYPE DE SERVICE " + listDetailServices);
+		} catch (Exception e) {
+			logger.warn(e.getMessage());
+			throw new Exception(e.getMessage());
+		}
+
+		logger.info("GET DETAIL SERVICE  OUT  : " + listDetailServices);
+
+		return new ResponseDto(listDetailServices);
 	}
-	
-	
-	
-	@Operation(summary ="BPM ***  ")
+
+	@Operation(summary = "BPM ***  ")
 	@RequestMapping(value = "/rechargeClassique", produces = { "application/json" }, method = RequestMethod.POST)
-	public @ResponseBody ResponseDto rechargeClassique(@Valid @RequestBody RechargeClassiqueDto rechargeClassiqueDto) throws Exception {
+	public @ResponseBody ResponseDto rechargeClassique(@Valid @RequestBody RechargeClassiqueDto rechargeClassiqueDto)
+			throws Exception {
 		ResponseRechargeDto responseRechargeDto = new ResponseRechargeDto();
 
 		if (rechargeClassiqueDto == null) {
@@ -65,11 +97,9 @@ public class MauritelApi {
 		System.err.println("Response in the Controller : " + responseRechargeDto);
 		return new ResponseDto(responseRechargeDto);
 	}
-	
-	
 
 	@GetMapping
-	public void RechargeMargetingService() {
+	public void RechargeMargetingService() throws Exception {
 
 	}
 
