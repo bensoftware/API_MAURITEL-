@@ -1,8 +1,11 @@
 package com.bpm.apimauritel.serviceImpl;
 
+import java.util.ArrayList;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import com.bpm.apimauritel.entities.DetailService;
 import com.bpm.apimauritel.entities.ServiceT;
 import com.bpm.apimauritel.repositories.ServiceRepository;
 import com.bpm.apimauritel.services.ServiceService;
@@ -60,6 +63,7 @@ public class ServiceServiceImpl implements ServiceService{
 		}
 		return serviceT;
 	}
+
 	
 
 }

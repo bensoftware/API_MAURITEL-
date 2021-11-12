@@ -86,4 +86,10 @@ public class DetailServiceServiceImpl implements DetailServiceService {
 		return detailServiceRepository.getDetailServiceByAmountAndIdService(amount, serviceT);
 	}
 
+	@Override
+	public List<DetailService> getDetailServiceByAmount(String amount) throws Exception {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

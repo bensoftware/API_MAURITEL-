@@ -42,6 +42,9 @@ public class MauritelApi {
 
 	@Autowired
 	DetailServiceService detailServiceService;
+	
+
+
 
 	@RequestMapping(value = "/", produces = { "application/json" }, method = RequestMethod.GET)
 	public String Welcome() {
@@ -51,7 +54,14 @@ public class MauritelApi {
 	@Operation(summary = "BPM ***Get all services ")
 	@RequestMapping(value = "/getAllMargetingService", produces = { "application/json" }, method = RequestMethod.GET)
 	public @ResponseBody ResponseDto getAllMargetingService() throws Exception {
-		return new ResponseDto(serviceService.getAllServices());
+		List<ServiceT> listServiceT=new ArrayList<>();
+		try {
+			listServiceT=serviceService.getAllServices();
+		} catch (Exception e) {
+			// TODO: handle exception
+			throw new Exception(e.getMessage());
+		}
+		return new ResponseDto(listServiceT);
 	}
 
 	@RequestMapping(value = "/getDetailServices/", produces = { "application/json" }, method = RequestMethod.GET)
@@ -77,6 +87,20 @@ public class MauritelApi {
 		return new ResponseDto(listDetailServices);
 	}
 
+	
+	@RequestMapping(value = "/getDetailServicesByAmount/", produces = { "application/json" }, method = RequestMethod.GET)
+	public ResponseDto getDetailServicesByAmount(@RequestParam(name = "amount", required = true) Long amount)
+			throws Exception {
+
+		logger.info("GET DETAIL SERVICE BY AMOUT IN : " + amount.longValue());
+
+	
+		logger.info("GET DETAIL SERVICE AMOUT OUT  : "  );
+
+		return new ResponseDto(null);
+	}
+	
+	
 	@Operation(summary = "BPM ***  ")
 	@RequestMapping(value = "/rechargeClassique", produces = { "application/json" }, method = RequestMethod.POST)
 	public @ResponseBody ResponseDto rechargeClassique(@Valid @RequestBody RechargeClassiqueDto rechargeClassiqueDto)
@@ -86,21 +110,24 @@ public class MauritelApi {
 		if (rechargeClassiqueDto == null) {
 			throw new Exception("Les informations sur le formulaire sont null");
 		}
-		// Test all attributes
+	
+		// Test API key
 
-		// Test key
-
-		// Test IP
+		// Test IP AUTHPORIZED
 
 		responseRechargeDto = rechargeService.rechargeClassique(rechargeClassiqueDto);
 
 		System.err.println("Response in the Controller : " + responseRechargeDto);
 		return new ResponseDto(responseRechargeDto);
 	}
+	
 
+	
+	
+	
 	@GetMapping
 	public void RechargeMargetingService() throws Exception {
-
+            
 	}
 
 }

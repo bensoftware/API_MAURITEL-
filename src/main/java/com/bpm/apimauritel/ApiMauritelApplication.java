@@ -2,6 +2,7 @@ package com.bpm.apimauritel;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
@@ -11,9 +12,9 @@ import com.bpm.apimauritel.dtos.ServiceDto;
 import com.bpm.apimauritel.dtos.TokenDto;
 import com.bpm.apimauritel.entities.DetailService;
 import com.bpm.apimauritel.entities.ServiceT;
-import com.bpm.apimauritel.securities.JWT;
 import com.bpm.apimauritel.services.CashService;
 import com.bpm.apimauritel.services.DetailServiceService;
+import com.bpm.apimauritel.services.ProcessingService;
 import com.bpm.apimauritel.services.RechargeService;
 import com.bpm.apimauritel.services.ServiceService;
 
@@ -35,6 +36,9 @@ public class ApiMauritelApplication implements ApplicationRunner {
 
 	@Autowired
 	CashService cashService;
+
+	@Autowired
+	ProcessingService processingService;
 
 	@Override
 	public void run(ApplicationArguments args) throws Exception {
@@ -78,31 +82,28 @@ public class ApiMauritelApplication implements ApplicationRunner {
 //		       ResponseRechargeDto responseRechargeDto2= rechargeService.rechargeClassique(rechargeClassiqueDto,token);
 //		   	System.err.println("Response : "+responseRechargeDto2);
 
-		JWT jwt = new JWT();
-		jwt.testDecodeJWT(token);
+//		JWT jwt = new JWT();
+//		jwt.testDecodeJWT(token);
+//		int G = JWT.getExpirationTime(token);
+//		
 
-		int G = JWT.getExpirationTime(token);
-		
-    
-	//System.err.println("Response : " + serviceService.getAllServices());
+//		List<DetailService> listDetailService = new ArrayList<>();
+//
+//		DetailService detailService = new DetailService();
+//		detailService.setAmount("300");
+//		detailService.setDescription("----");
+//	    detailService.setService(serviceT);
+//
+//		listDetailService.add(detailService);
+//
+//		ServiceT s = new ServiceT();
+//		s.setId(40L);
+		// s.setCodeOperation("1");
+		// s.setCodeService("9");
+//		  s.setDetailServices(listDetailService);
 
-		List<DetailService> listDetailService = new ArrayList<>();
+		// System.err.println("DetailService : "+detailServiceService.findByService(s));
 
-		DetailService detailService = new DetailService();
-		detailService.setAmount("300");
-		detailService.setDescription("----");
-		// detailService.setService(serviceT);
-
-		listDetailService.add(detailService);
-
-		ServiceT s = new ServiceT();
-		s.setId(40L);
-		//s.setCodeOperation("1");
-	   // s.setCodeService("9");
-		  s.setDetailServices(listDetailService);
-
-	//    System.err.println("DetailService : "+detailServiceService.findByService(s));
-		  
 		// ServiceT serviceT= serviceService.save(s);
 
 		// System.err.println("Service "+serviceT);
@@ -111,24 +112,20 @@ public class ApiMauritelApplication implements ApplicationRunner {
 
 		// cashService.saveService();
 
-		List<ServiceT>  listServiceT=serviceService.getAllServices();
-		
-		List<ServiceT>  newListService=new ArrayList<>();
-		
-		String amountT="200";
-		for (ServiceT serviceT : listServiceT) {
-			List<DetailService> listDetailServices=new ArrayList<>();
-			listDetailServices=serviceT.getDetailServices();
-				for (DetailService detailServiceT : listDetailServices) {
-					if(detailServiceT.getAmount().equals(amountT)){
-						//
-					serviceT.setDetailServices(detailServiceService.getDetailServiceByAmountAndIdService(amountT,serviceT));
-					newListService.add(serviceT);
-					}
-				}
-				listDetailServices.clear();
-		}
-		System.err.println("Liste Filtered" +newListService);  
+		List<ServiceT> listServiceT = serviceService.getAllServices();
+
+		String amount = "200";
+
+		List<DetailService> filteredServicesT = listServiceT.stream()
+				.flatMap(serviceT -> serviceT.getDetailServices().stream())
+				.filter(detailService -> detailService.getAmount().equalsIgnoreCase("200"))
+				.collect(Collectors.toList());
+
+	//	filteredServicesT.forEach(detailService->detailService.getService());
+		System.err.println("Liste Filtered" + filteredServicesT);
+
+		 // System.err.println("Liste Filtered"
+		// +processingService.getServicesByAmount("500"));
 	}
 
 }

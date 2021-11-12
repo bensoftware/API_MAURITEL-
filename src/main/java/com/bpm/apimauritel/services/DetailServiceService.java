@@ -21,4 +21,7 @@ public interface DetailServiceService {
 	public  List<DetailService>  getDetailServiceByAmountAndIdService(String amount,ServiceT serviceT) throws Exception;
 	
 	
+	public  List<DetailService>  getDetailServiceByAmount(String amount) throws Exception;
+	
+	
 }

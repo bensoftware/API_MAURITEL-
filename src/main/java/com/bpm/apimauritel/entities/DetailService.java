@@ -1,19 +1,14 @@
 package com.bpm.apimauritel.entities;
 
 import java.io.Serializable;
-
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
-
 import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.CascadeType;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-
 import lombok.Data;
 import lombok.ToString;
 
@@ -26,14 +21,12 @@ public class DetailService implements Serializable {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	@Id
 	private Long id;
-
 	private String amount;
 	private String description;
 	
 	@ToString.Exclude
 	@ManyToOne
 	@Cascade(CascadeType.SAVE_UPDATE)
-	// @JoinColumn(name = "detailService_id")
 	@JsonIgnore
 	private ServiceT service;
 	
