@@ -16,14 +16,20 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import com.bpm.apimauritel.dtos.RechargeClassiqueDto;
+import com.bpm.apimauritel.dtos.RechargeMarketingDto;
 import com.bpm.apimauritel.dtos.ResponseDto;
 import com.bpm.apimauritel.dtos.ResponseRechargeDto;
 import com.bpm.apimauritel.entities.DetailService;
 import com.bpm.apimauritel.entities.ServiceT;
+import com.bpm.apimauritel.entities.TransactionPayement;
 import com.bpm.apimauritel.services.DetailServiceService;
 import com.bpm.apimauritel.services.RechargeService;
 import com.bpm.apimauritel.services.ServiceService;
+import com.bpm.apimauritel.services.TransactionPayementService;
+
 import io.swagger.v3.oas.annotations.Operation;
+
+
 
 @RestController
 @CrossOrigin("*")
@@ -43,14 +49,16 @@ public class MauritelApi {
 	@Autowired
 	DetailServiceService detailServiceService;
 	
-
-
+	@Autowired
+	TransactionPayementService transactionPayementService;
+	
 
 	@RequestMapping(value = "/", produces = { "application/json" }, method = RequestMethod.GET)
 	public String Welcome() {
 		return "MAURITEL API is UP";
 	}
 
+	
 	@Operation(summary = "BPM ***Get all services ")
 	@RequestMapping(value = "/getAllMargetingService", produces = { "application/json" }, method = RequestMethod.GET)
 	public @ResponseBody ResponseDto getAllMargetingService() throws Exception {
@@ -64,6 +72,7 @@ public class MauritelApi {
 		return new ResponseDto(listServiceT);
 	}
 
+	
 	@RequestMapping(value = "/getDetailServices/", produces = { "application/json" }, method = RequestMethod.GET)
 	public ResponseDto getDetailServicesByIdService(@RequestParam(name = "idService", required = true) Long idService)
 			throws Exception {
@@ -102,19 +111,24 @@ public class MauritelApi {
 	
 	
 	@Operation(summary = "BPM ***  ")
-	@RequestMapping(value = "/rechargeClassique", produces = { "application/json" }, method = RequestMethod.POST)
+	@RequestMapping(value = "/rechargeClassique", produces = {"application/json"}, method = RequestMethod.POST)
 	public @ResponseBody ResponseDto rechargeClassique(@Valid @RequestBody RechargeClassiqueDto rechargeClassiqueDto)
 			throws Exception {
 		ResponseRechargeDto responseRechargeDto = new ResponseRechargeDto();
 
 		if (rechargeClassiqueDto == null) {
-			throw new Exception("Les informations sur le formulaire sont null");
+			throw new Exception("Les Informations sur le formulaire sont null");
 		}
 	
-		// Test API key
+		  // Test API key
 
 		// Test IP AUTHPORIZED
-
+		
+       //Disponibilite du service ou stock
+		
+		
+	  //Save Transaction
+		
 		responseRechargeDto = rechargeService.rechargeClassique(rechargeClassiqueDto);
 
 		System.err.println("Response in the Controller : " + responseRechargeDto);
@@ -122,12 +136,34 @@ public class MauritelApi {
 	}
 	
 
-	
-	
-	
-	@GetMapping
-	public void RechargeMargetingService() throws Exception {
-            
+	@RequestMapping(value = "/rechargeMargetingService", produces = {"application/json"}, method = RequestMethod.POST)
+	public ResponseDto RechargeMargetingService(RechargeMarketingDto rechargeMarketingDto) throws Exception {
+		
+		ResponseRechargeDto responseRechargeDto = new ResponseRechargeDto();
+		
+		logger.info(" RECHARGE MARKETING SERVICE [IN]  : "   +  rechargeMarketingDto);
+		
+		if(rechargeMarketingDto == null) {
+			throw new Exception(" Les Informations sur le formulaire sont null !!! ");
+		}
+		
+		ServiceT serviceT = serviceService.findServiceById(rechargeMarketingDto.getIdService());
+		
+
+		 // bindTransactionPayement(rechargeMarketingDto);
+		
+		transactionPayementService.save(null);
+		 
+		
+		responseRechargeDto = rechargeService.rechargeParServiceMarketing(rechargeMarketingDto);
+		
+		logger.info(" RECHARGE MARKETING SERVICE [OUT]  : "  +  responseRechargeDto);
+		
+		// Test API key
+
+	  // Test IP AUTHPORIZED
+		
+	 return new ResponseDto(responseRechargeDto);
 	}
 
 }

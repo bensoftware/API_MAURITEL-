@@ -26,4 +26,5 @@ public class ServiceT implements Serializable {
 	List<DetailService> detailServices;
 	private String codeService;
 	private String codeOperation;
+	
 }

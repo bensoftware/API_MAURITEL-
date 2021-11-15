@@ -27,7 +27,7 @@ public class RechargeServiceHelper {
 		params.put("sender", rechargeMarketingDto.getSender());
 		params.put("receiver",rechargeMarketingDto.getReceiver());
 		params.put("amount", rechargeMarketingDto.getAmount());
-		params.put("service", rechargeMarketingDto.getService());
+		params.put("service", rechargeMarketingDto.getCodeService());
 		return params;
 	}
 	

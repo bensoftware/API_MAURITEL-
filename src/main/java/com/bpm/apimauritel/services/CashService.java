@@ -7,4 +7,6 @@ public interface CashService {
 	public void saveService() throws Exception ;
 	
 	public void saveDetailService(ServiceT serviceT) throws Exception ;
+	
+	public void Upadate() throws Exception ;
 }

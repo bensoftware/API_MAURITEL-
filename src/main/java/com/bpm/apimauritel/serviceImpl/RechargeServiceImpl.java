@@ -1,7 +1,6 @@
 package com.bpm.apimauritel.serviceImpl;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import org.slf4j.Logger;
@@ -47,8 +46,7 @@ public class RechargeServiceImpl implements RechargeService {
 
 	@Override
 	public String checkStatus() throws Exception {
-		// TODO Auto-generated method stub
-		final String baseUrl = host + "/" + "/bm/api/check";
+		final String baseUrl = host + "/" + "bm/api/check";
 		ResponseEntity<String> response = null;
 		String result = "";
 		try {
@@ -56,8 +54,8 @@ public class RechargeServiceImpl implements RechargeService {
 			if (response.getStatusCode() == HttpStatus.OK) {
 				return response.getBody();
 			}
+			logger.info("MAURITEL RESPONSE STATUS : " + response.getStatusCode());
 		} catch (Exception e) {
-			// TODO: handle exception
 			throw new Exception(e.getMessage());
 		}
 		return response.getBody();
@@ -66,8 +64,11 @@ public class RechargeServiceImpl implements RechargeService {
 	
 	@Override
 	public TokenDto authentication() throws Exception {
-		// TODO Auto-generated method stub
-
+		
+		if(!this.checkStatus().equals("1")) {
+			throw new Exception("MAURITEL SERVICE IS DOWN ");
+		}
+		
 		UserDto userDto = new UserDto(username, password);
 
 		String url = host + "/" + "bm/authenticate";
@@ -86,7 +87,6 @@ public class RechargeServiceImpl implements RechargeService {
 				}
 			}
 		} catch (Exception e) {
-			// TODO: handle exception
 			throw new Exception("Exception when calling MAURITEL API : " + e.getMessage());
 		}
 		return token;
@@ -95,9 +95,16 @@ public class RechargeServiceImpl implements RechargeService {
 
 	@Override
 	public List<ServiceDto> getMarketingServices() throws Exception {
-		// TODO Auto-generated method stub
-
-		if (!JWT.iSJwtTimeValid(JWT.getExpirationTime(this.token))) {
+	
+		if(!this.checkStatus().equals("1")) {
+			throw new Exception("MAURITEL SERVICE IS DOWN ");
+		}
+		
+		if(this.token==null) {
+			this.token=this.authentication();
+		}
+		
+		if(!JWT.iSJwtTimeValid(JWT.getExpirationTime(this.token))) {
 			token = authentication();
 		}
 
@@ -131,9 +138,17 @@ public class RechargeServiceImpl implements RechargeService {
 	
 	@Override
 	public ResponseRechargeDto rechargeParServiceMarketing(RechargeMarketingDto rechargeMarketingDto) throws Exception {
-		// Has to be done in the controller level
-		if (!JWT.iSJwtTimeValid(JWT.getExpirationTime(this.token))) {
-			token = authentication();
+	
+		if(!this.checkStatus().equals("1")) {
+			throw new Exception("MAURITEL SERVICE IS DOWN ");
+		}
+		
+		if(this.token==null) {
+			this.token=this.authentication();
+		}
+		
+		if (!JWT.iSJwtTimeValid(JWT.getExpirationTime(this.token))){
+			this.token = authentication();
 		}
 
 		HttpHeaders headers = RechargeServiceHelper.getHeaders(this.token);
@@ -152,7 +167,6 @@ public class RechargeServiceImpl implements RechargeService {
 				rechargeDto = response.getBody();
 			}
 		} catch (Exception e) {
-			// TODO: handle exception
 			throw new Exception("Exception : " + e.getMessage());
 		}
 		return rechargeDto;
@@ -161,10 +175,19 @@ public class RechargeServiceImpl implements RechargeService {
 	
 	@Override
 	public ResponseRechargeDto rechargeClassique(RechargeClassiqueDto rechargeClassiqueDto) throws Exception {
-		// TODO Auto-generated method stub
-		if (!JWT.iSJwtTimeValid(JWT.getExpirationTime(this.token))) {
-			token = authentication();
+	
+		if(!this.checkStatus().equals("1")) {
+			throw new Exception("MAURITEL SERVICE IS DOWN ");
 		}
+		
+		if(this.token==null) {
+			this.token=this.authentication();
+		}
+		
+		if (!JWT.iSJwtTimeValid(JWT.getExpirationTime(this.token))) {
+			this.token = authentication();
+		}
+		
 		HttpHeaders headers = RechargeServiceHelper.getHeaders(this.token);
 
 		HttpEntity<String> entete = new HttpEntity<>(headers);
@@ -176,14 +199,13 @@ public class RechargeServiceImpl implements RechargeService {
 		ResponseRechargeDto rechargeDto = new ResponseRechargeDto();
 
 		try {
-			HttpEntity<ResponseRechargeDto> response = restTemplate.exchange(URL, HttpMethod.GET, entete,
+			HttpEntity<ResponseRechargeDto> response = restTemplate.exchange(URL,HttpMethod.GET, entete,
 					ResponseRechargeDto.class, params);
 			if (response.getBody() != null) {
 				rechargeDto = response.getBody();
 				System.err.println("Service rechargeClassique : " + rechargeDto);
 			}
-		} catch (Exception e) {
-			// TODO: handle exception
+		}catch (Exception e) {
 			throw new Exception("Exception : " + e.getMessage());
 		}
 		return rechargeDto;

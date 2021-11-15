@@ -7,5 +7,6 @@ public class RechargeMarketingDto {
 	private String sender;
 	private String receiver;
 	private String amount;
-	private String service;
+	private String codeService;
+	private long idService;
 }

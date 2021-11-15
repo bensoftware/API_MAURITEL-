@@ -30,6 +30,5 @@ public class DetailService implements Serializable {
 	@JsonIgnore
 	private ServiceT service;
 	
-	
 
 }

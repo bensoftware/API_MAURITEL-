@@ -9,8 +9,13 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class JWT {
 	
-	public static int getExpirationTime(TokenDto tokenDto) {
+	public static int getExpirationTime(TokenDto tokenDto) throws Exception {
 
+		
+		if(tokenDto == null) {
+			throw new Exception("The token is null,try to see if MAURITEL SERVICE IS UP");
+		}
+		
 		String jwtToken = tokenDto.getToken();
 
 		String[] split_string = jwtToken.split("\\.");

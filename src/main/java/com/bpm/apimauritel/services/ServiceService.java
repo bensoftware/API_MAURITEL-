@@ -16,6 +16,9 @@ public interface ServiceService {
 	
 	
 	public ServiceT findServiceByCodeService(String codeOperation) throws Exception;
+	
+	
+	public ServiceT findServiceById(Long idService) throws Exception;
 
 	
 	

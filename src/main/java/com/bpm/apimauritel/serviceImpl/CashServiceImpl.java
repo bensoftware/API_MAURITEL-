@@ -45,7 +45,8 @@ public class CashServiceImpl implements CashService {
 				serviceT.setCodeOperation(serviceDto.getCodeOperation());
 				serviceT.setCodeService(serviceDto.getService());
 				// serviceT.setDetailServices(listDetailService);
-				if (serviceService.findServiceByCodeService(serviceDto.getService()) == null) {
+				ServiceT service=serviceService.findServiceByCodeService(serviceDto.getService());
+				if (service==null) {
 					serviceT = serviceService.save(serviceT);
 				}
 				saveDetailService(serviceT);
@@ -54,6 +55,7 @@ public class CashServiceImpl implements CashService {
 		}
 	}
 
+	
 	@Override
 	public void saveDetailService(ServiceT serviceT) throws Exception {
 		DetailService detailService = null;
@@ -66,10 +68,16 @@ public class CashServiceImpl implements CashService {
 				detailService.setService(serviceT);
 				try {
 					detailService = detailServiceService.findDetailServiceByDescription(serviceDto.getDescription());
-					if (detailService == null) {
+					if(detailService == null){
+						   //Verifier si la description n'as pas changé, à partir du ServiceT. 
+						  //En fait ai ce un changement ou un ajout.
+						
+						
+						
+						//Lorsqu'on ne trouve pas... Comment bloquer
 						detailServiceService.save(detailService);
-					} else {
-						// logger.info('');
+					}else{
+						// logger.info("");
 					}
 				} catch (Exception e) {
 					throw new Exception(e.getMessage());
@@ -77,6 +85,14 @@ public class CashServiceImpl implements CashService {
 			}
 		}
 	}
+
+
+	@Override
+	public void Upadate() throws Exception {
+		// TODO Auto-generated method stub
+		
+	}
 	
 
+	
 }

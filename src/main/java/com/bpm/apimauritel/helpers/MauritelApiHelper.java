@@ -46,9 +46,7 @@ public class MauritelApiHelper {
 		}
         
         //
-        if(rechargeMarketingDto.getService().isEmpty() || rechargeMarketingDto.getService()== null) {
-            
-		}
+        
 		
 	}
 }
