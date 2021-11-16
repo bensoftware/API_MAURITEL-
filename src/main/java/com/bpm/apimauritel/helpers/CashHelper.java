@@ -19,7 +19,8 @@ public class CashHelper {
 					 detailService.setDescription(serviceDto.getDescription()); 
 					 detailService.setService(serviceT);
 					 try {
-						 if(detailServiceService.findDetailServiceByDescription(serviceDto.getDescription())==null) {
+						 detailService=detailServiceService.findDetailServiceByDescription(serviceDto.getDescription());
+						 if(detailService==null){
 							 detailServiceService.save(detailService);
 						 }else{
 							 // logger.info('');
@@ -30,5 +31,7 @@ public class CashHelper {
 				}
 			}
 	}
+	
+	
 	
 }

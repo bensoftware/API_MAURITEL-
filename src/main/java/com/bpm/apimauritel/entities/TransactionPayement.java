@@ -2,7 +2,6 @@ package com.bpm.apimauritel.entities;
 
 import java.io.Serializable;
 import java.util.Date;
-
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -21,17 +20,19 @@ public class TransactionPayement implements Serializable {
 	
 	private ServiceT serviceT;
 	
+	private String sender;
+    private String receiver;
     private double amountPay;
+    private String statusPayement;
+    private String transactionId;
+    private String errorMessage;
+    private Date   transactionDate;
+    private String idTransaction;
+    
+    ///--OPTIONAL FOR NOW
     private String billNumber;
     private String billerId;
     private String comptabiliser;
-    private String statusPayement;
-    private String transactionId;
-    private String userPhone;
-    private String errorMessage;
     private String facturierId;
-    
-    private Date   transactionDate;
     private double solde;
-    
 }

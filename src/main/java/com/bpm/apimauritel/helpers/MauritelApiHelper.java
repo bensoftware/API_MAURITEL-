@@ -18,11 +18,11 @@ public class MauritelApiHelper {
 		}
 		
 		//
-		if (rechargeClassiqueDto.getReceiver().isEmpty() || rechargeClassiqueDto.getReceiver() == null) {
+		if(rechargeClassiqueDto.getReceiver().isEmpty() || rechargeClassiqueDto.getReceiver() == null) {
             
 		}
 		
-        if (rechargeClassiqueDto.getSender().isEmpty() || rechargeClassiqueDto.getSender()== null) {
+        if(rechargeClassiqueDto.getSender().isEmpty() || rechargeClassiqueDto.getSender()== null) {
             
 		}
 	}
@@ -43,10 +43,8 @@ public class MauritelApiHelper {
 		//
         if(rechargeMarketingDto.getSender().isEmpty() || rechargeMarketingDto.getSender()== null) {
             
-		}
-        
-        //
-        
-		
+		}  
 	}
+	
+	
 }

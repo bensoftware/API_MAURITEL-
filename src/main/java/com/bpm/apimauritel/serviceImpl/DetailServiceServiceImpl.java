@@ -22,15 +22,17 @@ public class DetailServiceServiceImpl implements DetailServiceService {
 
 
 	@Override
-	public void save(DetailService detailService) throws Exception {
+	public DetailService save(DetailService detailService) throws Exception {
 		// TODO Auto-generated method stub
+		DetailService detService=null;
 		try {
-			detailServiceRepository.save(detailService);
+			detService=detailServiceRepository.saveAndFlush(detailService);
 		} catch (Exception e) {
 			// TODO: handle exception
 			logger.warn(e.getMessage());
 			throw new Exception(e.getMessage());
 		}
+		return detService;
 	}
 
 	@Override

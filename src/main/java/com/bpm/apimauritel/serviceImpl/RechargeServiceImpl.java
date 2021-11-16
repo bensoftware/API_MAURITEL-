@@ -120,10 +120,13 @@ public class RechargeServiceImpl implements RechargeService {
 			ResponseEntity<Object> response = restTemplate.exchange(URL, HttpMethod.GET, entete, Object.class);
 			if (response.getStatusCode() == HttpStatus.OK) {
 				if (response.getBody() != null) {
-					List<Object> list = (List<Object>) response.getBody();
+					List<Object> listObjet = (List<Object>) response.getBody();
 
-					for (Object x : list) {
+					for (Object x : listObjet) {
 						Map<String, String> map = (Map<String, String>) x;
+						
+						System.err.println(""+map);
+						
 						serviceDtos.add(new ServiceDto(map.get("Service"), map.get("CodeOperation"),
 								map.get("Description"), map.get("Amount")));
 					}
@@ -210,6 +213,8 @@ public class RechargeServiceImpl implements RechargeService {
 		}
 		return rechargeDto;
 	}
+	
+	
 	
 
 }

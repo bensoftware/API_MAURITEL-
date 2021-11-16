@@ -9,6 +9,7 @@ import org.springframework.http.MediaType;
 import com.bpm.apimauritel.dtos.RechargeClassiqueDto;
 import com.bpm.apimauritel.dtos.RechargeMarketingDto;
 import com.bpm.apimauritel.dtos.TokenDto;
+import com.bpm.apimauritel.entities.TransactionPayement;
 
 public class RechargeServiceHelper {
 	
@@ -39,5 +40,22 @@ public class RechargeServiceHelper {
 		params.put("amount", rechargeClassiqueDto.getAmount());
 		return params;
 	}
+	
+	
+	public static  TransactionPayement bindTransactionPayement(RechargeMarketingDto rechargeMarketingDto) {
+		
+		TransactionPayement transactionPayement=new TransactionPayement();
+		
+		transactionPayement.setAmountPay(Double.parseDouble(rechargeMarketingDto.getAmount()));
+		
+		transactionPayement.setTransactionId(rechargeMarketingDto.getIdTransction());
+		
+		transactionPayement.setSender(rechargeMarketingDto.getSender());
+		
+		transactionPayement.setReceiver(rechargeMarketingDto.getReceiver());
+		
+		return transactionPayement;
+	}
+	
 
 }

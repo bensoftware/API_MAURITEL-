@@ -54,9 +54,9 @@ public class ApiMauritelApplication implements ApplicationRunner {
 		rechargeMarketingDto.setSender("37804578");
 		rechargeMarketingDto.setCodeService("1");
 		 
-    //		
-		ResponseRechargeDto responseRechargeDto= rechargeService.rechargeParServiceMarketing(rechargeMarketingDto);
-		System.err.println("Response : "+responseRechargeDto);
+    		
+	//	ResponseRechargeDto responseRechargeDto= rechargeService.rechargeParServiceMarketing(rechargeMarketingDto);
+   //System.err.println("Response : "+responseRechargeDto);
 		
  //		
 //		

@@ -27,57 +27,70 @@ public class CashServiceImpl implements CashService {
 
 	@Autowired
 	DetailServiceService detailServiceService;
-
-	List<ServiceDto> listService;
+	
+	List<ServiceDto> listServiceFromMauritel;
 
 	@Override
 	public void saveService() throws Exception {
 
 		ServiceT serviceT = null;
-		listService = rechargeService.getMarketingServices();
+		
+		listServiceFromMauritel = rechargeService.getMarketingServices();
 
 		Hashtable<String, String> serviceSaved = new Hashtable<>();
 
-		for (ServiceDto serviceDto : listService) {
-			// Also check in the Database if it exists
-			if (!serviceSaved.contains(serviceDto.getService())) {
+		for (ServiceDto serviceDto : listServiceFromMauritel) {
+			// CodeService == au code unique qui identifie un service venant de l'API MAURITEL
+			if (!serviceSaved.contains(serviceDto.getService())){
 				serviceT = new ServiceT();
 				serviceT.setCodeOperation(serviceDto.getCodeOperation());
 				serviceT.setCodeService(serviceDto.getService());
-				// serviceT.setDetailServices(listDetailService);
+
 				ServiceT service=serviceService.findServiceByCodeService(serviceDto.getService());
-				if (service==null) {
+				if(service==null) {
+					//Lorsqu'on ne le trouve pas.......................: Comment bloquer   ?
+				   //Si ce service n'existe plus dans Mauritel service : Comment le savoir ?
+					
+				 //Comparaison entre ce qui est dans la base de donnée et ce qui vient de Mauritel Service.
+				
+			   //Est ce que ce qui est dans la base de  donnée correspond à ce qui viens de Mauritel.
+					
 					serviceT = serviceService.save(serviceT);
+					saveDetailService(serviceT);
+				}else{
+					service.setCodeOperation(serviceDto.getCodeOperation());
+					service = serviceService.save(service);
+					this.saveDetailService(service);
 				}
-				saveDetailService(serviceT);
 			}
-			serviceSaved.put(serviceDto.getCodeOperation(), serviceDto.getService());
+			serviceSaved.put(serviceDto.getCodeOperation(),serviceDto.getService());
 		}
 	}
 
-	
+
+   //  
 	@Override
 	public void saveDetailService(ServiceT serviceT) throws Exception {
 		DetailService detailService = null;
-		for (ServiceDto serviceDto : listService) {
-			System.err.println("");
-			if (serviceDto.getService().equalsIgnoreCase(serviceT.getCodeService())) {
+		for (ServiceDto serviceDto : listServiceFromMauritel) {
+			//System.err.println("");
+			if (serviceDto.getService().equalsIgnoreCase(serviceT.getCodeService()) ) {
 				detailService = new DetailService();
 				detailService.setAmount(serviceDto.getAmount());
 				detailService.setDescription(serviceDto.getDescription());
 				detailService.setService(serviceT);
 				try {
-					detailService = detailServiceService.findDetailServiceByDescription(serviceDto.getDescription());
-					if(detailService == null){
-						   //Verifier si la description n'as pas changé, à partir du ServiceT. 
-						  //En fait ai ce un changement ou un ajout.
-						
-						
-						
-						//Lorsqu'on ne trouve pas... Comment bloquer
+				DetailService	detailServiceTest = detailServiceService.findDetailServiceByDescription(serviceDto.getDescription());
+					if(detailServiceTest == null){
+						 //On insert le DetailService pour ce service,serviceT.	
 						detailServiceService.save(detailService);
 					}else{
-						// logger.info("");
+					  //On insert le DetailService pour ce service.
+					 //Mise à jour des informations modifiées. 
+						detailService.setAmount(serviceDto.getAmount());
+						detailService.setDescription(serviceDto.getDescription());
+						detailService.setService(serviceT);
+						detailServiceService.save(detailService);
 					}
 				} catch (Exception e) {
 					throw new Exception(e.getMessage());
@@ -86,11 +99,31 @@ public class CashServiceImpl implements CashService {
 		}
 	}
 
+	
 
 	@Override
 	public void Upadate() throws Exception {
 		// TODO Auto-generated method stub
-		
+	List<ServiceT>	listServicesFromDatabase=serviceService.getAllServices();
+	
+	  //Verifier si un Service dans la base de donnée existe chez MAURITEL.
+
+	    Hashtable<String, String> serviceSaved = new Hashtable<>();
+	
+	    listServiceFromMauritel =rechargeService.getMarketingServices();
+	
+	    //Mise à Jour
+	    if(listServicesFromDatabase.size() == listServiceFromMauritel.size()) {
+	    	
+	    }else {
+	    	
+	    }
+	    
+	    
+		for(ServiceDto serviceDto : listServiceFromMauritel) {
+			   		
+		}
+	
 	}
 	
 

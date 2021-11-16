@@ -7,7 +7,7 @@ import com.bpm.apimauritel.entities.ServiceT;
 
 public interface DetailServiceService {	
 	
-	public void save(DetailService detailService) throws Exception;
+	public DetailService save(DetailService detailService) throws Exception;
 	
 	public void update(DetailService detailService) throws Exception;
 	
