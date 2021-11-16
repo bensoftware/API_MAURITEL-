@@ -68,7 +68,6 @@ public class CashServiceImpl implements CashService {
 	}
 
 
-   //  
 	@Override
 	public void saveDetailService(ServiceT serviceT) throws Exception {
 		DetailService detailService = null;
@@ -118,7 +117,6 @@ public class CashServiceImpl implements CashService {
 	    }else {
 	    	
 	    }
-	    
 	    
 		for(ServiceDto serviceDto : listServiceFromMauritel) {
 			   		
