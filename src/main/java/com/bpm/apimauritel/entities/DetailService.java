@@ -9,10 +9,12 @@ import javax.persistence.ManyToOne;
 import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.CascadeType;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.ToString;
 
-@Data
+@Getter
+@Setter
 @Entity
 public class DetailService implements Serializable {
 
@@ -23,12 +25,11 @@ public class DetailService implements Serializable {
 	private Long id;
 	private String amount;
 	private String description;
-	
+
 	@ToString.Exclude
 	@ManyToOne
 	@Cascade(CascadeType.SAVE_UPDATE)
 	@JsonIgnore
 	private ServiceT service;
-	
 
 }

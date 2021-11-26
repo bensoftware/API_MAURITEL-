@@ -32,11 +32,12 @@ public class Config {
 		return new RestTemplate(factory);
 	}
 
-	// For Development purpose
+	// For Development purpose,it allows us to make request to https links.
 	@Bean
 	public RestTemplate getRestTemplate() throws KeyStoreException, NoSuchAlgorithmException, KeyManagementException {
 		TrustStrategy acceptingTrustStrategy = (x509Certificates, s) -> true;
-		SSLContext sslContext = org.apache.http.ssl.SSLContexts.custom().loadTrustMaterial(null, acceptingTrustStrategy)
+		SSLContext sslContext = org.apache.http.ssl.SSLContexts.custom()
+				.loadTrustMaterial(null, acceptingTrustStrategy)
 				.build();
 		SSLConnectionSocketFactory csf = new SSLConnectionSocketFactory(sslContext, new NoopHostnameVerifier());
 		CloseableHttpClient httpClient = HttpClients.custom().setSSLSocketFactory(csf).build();
@@ -46,14 +47,21 @@ public class Config {
 		return restTemplate;
 	}
 
+	
 	@Bean
 	public OpenAPI customOpenAPI() {
 		return new OpenAPI()
-				.info(new Info().title(Message.DOC_API_NAME).version(Message.VERSION)
+				.info(new Info()
+				.title(Message.DOC_API_NAME)
+				.version(Message.VERSION)
 				.description(Message.DOC_API_DESCRIPTION))
-				.addSecurityItem(new SecurityRequirement().addList(Message.SECURITY_SCHEME))
-				.components(new Components().addSecuritySchemes(Message.SECURITY_SCHEME, new SecurityScheme()
-				.name(Message.SECURITY_SCHEME).type(SecurityScheme.Type.HTTP).scheme(Message.SCHEME)));
+				.addSecurityItem(new SecurityRequirement()
+				.addList(Message.SECURITY_SCHEME))
+				.components(new Components()
+				.addSecuritySchemes(Message.SECURITY_SCHEME, new SecurityScheme()
+				.name(Message.SECURITY_SCHEME).type(SecurityScheme.Type.HTTP)
+				.scheme(Message.SCHEME)));
 	}
+	
 
 }

@@ -1,8 +1,11 @@
 package com.bpm.apimauritel.serviceImpl;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +24,8 @@ import com.bpm.apimauritel.dtos.ResponseRechargeDto;
 import com.bpm.apimauritel.dtos.ServiceDto;
 import com.bpm.apimauritel.dtos.TokenDto;
 import com.bpm.apimauritel.dtos.UserDto;
+import com.bpm.apimauritel.entities.DetailService;
+import com.bpm.apimauritel.entities.ServiceT;
 import com.bpm.apimauritel.helpers.RechargeServiceHelper;
 import com.bpm.apimauritel.securities.JWT;
 import com.bpm.apimauritel.services.RechargeService;
@@ -92,6 +97,8 @@ public class RechargeServiceImpl implements RechargeService {
 		return token;
 	}
 	
+	
+	
 
 	@Override
 	public List<ServiceDto> getMarketingServices() throws Exception {
@@ -138,6 +145,9 @@ public class RechargeServiceImpl implements RechargeService {
 		return serviceDtos;
 	}
 
+	
+	
+	
 	
 	@Override
 	public ResponseRechargeDto rechargeParServiceMarketing(RechargeMarketingDto rechargeMarketingDto) throws Exception {
@@ -212,6 +222,17 @@ public class RechargeServiceImpl implements RechargeService {
 			throw new Exception("Exception : " + e.getMessage());
 		}
 		return rechargeDto;
+	}
+
+
+	@Override
+	public Set<String> getMontants(List<DetailService> listDetailService) throws Exception {
+		// TODO Auto-generated method stub
+		Set<String> setOfAmount=new HashSet<>();
+		for (DetailService detailService : listDetailService) {
+			setOfAmount.add(detailService.getAmount());
+		}
+		return setOfAmount;
 	}
 	
 	

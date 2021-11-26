@@ -46,7 +46,9 @@ public class RechargeServiceHelper {
 		
 		TransactionPayement transactionPayement=new TransactionPayement();
 		
-		transactionPayement.setAmountPay(Double.parseDouble(rechargeMarketingDto.getAmount()));
+		//transactionPayement.setAmountPay(Double.parseDouble(rechargeMarketingDto.getAmount()));
+		
+		transactionPayement.setAmountPay(85);
 		
 		transactionPayement.setTransactionId(rechargeMarketingDto.getIdTransction());
 		

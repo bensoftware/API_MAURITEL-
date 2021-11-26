@@ -11,7 +11,6 @@ public class RechargeMarketingDto {
 	private String codeService;
 	private String service;
 	
-	private long idService;
 	private String idTransction;
 	private String operateur ;
 	 

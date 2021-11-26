@@ -2,6 +2,8 @@ package com.bpm.apimauritel.serviceImpl;
 
 import java.util.Hashtable;
 import java.util.List;
+import java.util.Set;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,6 +11,7 @@ import org.springframework.stereotype.Service;
 import com.bpm.apimauritel.dtos.ServiceDto;
 import com.bpm.apimauritel.entities.DetailService;
 import com.bpm.apimauritel.entities.ServiceT;
+import com.bpm.apimauritel.helpers.CashHelper;
 import com.bpm.apimauritel.services.CashService;
 import com.bpm.apimauritel.services.DetailServiceService;
 import com.bpm.apimauritel.services.RechargeService;
@@ -48,12 +51,14 @@ public class CashServiceImpl implements CashService {
 
 				ServiceT service=serviceService.findServiceByCodeService(serviceDto.getService());
 				if(service==null) {
-					//Lorsqu'on ne le trouve pas.......................: Comment bloquer   ?
-				   //Si ce service n'existe plus dans Mauritel service : Comment le savoir ?
 					
-				 //Comparaison entre ce qui est dans la base de donnée et ce qui vient de Mauritel Service.
+					 //Lorsqu'on ne le trouve pas........................: Comment bloquer    ?
+					
+				   //  Si ce service n'existe plus dans Mauritel service : Comment le savoir  ?
+					
+				 //    Comparaison entre ce qui est dans la base de donnée et ce qui vient de Mauritel Service.
 				
-			   //Est ce que ce qui est dans la base de  donnée correspond à ce qui viens de Mauritel.
+			   //      Est ce que ce qui est dans la base de  donnée correspond à ce qui viens de Mauritel.
 					
 					serviceT = serviceService.save(serviceT);
 					saveDetailService(serviceT);
@@ -103,27 +108,52 @@ public class CashServiceImpl implements CashService {
 	@Override
 	public void Upadate() throws Exception {
 		// TODO Auto-generated method stub
-	List<ServiceT>	listServicesFromDatabase=serviceService.getAllServices();
+		
+	    List<ServiceT>	listServicesFromDatabase=serviceService.getAllServices();
 	
 	  //Verifier si un Service dans la base de donnée existe chez MAURITEL.
 
-	    Hashtable<String, String> serviceSaved = new Hashtable<>();
-	
+	    Hashtable<String, ServiceT> serviceTempo = new Hashtable<>();
+	    
+	    
+	    Hashtable<String, ServiceT> serviceLoop = CashHelper.listToHashTableServiceT(listServicesFromDatabase);
+		
+	 // getting keySet() into Set
+        Set<String> setOfServiceCodeService = serviceLoop.keySet();
+        
+        
 	    listServiceFromMauritel =rechargeService.getMarketingServices();
 	
-	    //Mise à Jour
-	    if(listServicesFromDatabase.size() == listServiceFromMauritel.size()) {
-	    	
-	    }else {
-	    	
-	    }
+	    ServiceT serviceTForUpdate =null;
 	    
-		for(ServiceDto serviceDto : listServiceFromMauritel) {
-			   		
+	    //Mise à Jour
+	    if(listServicesFromDatabase.size() == listServiceFromMauritel.size() || listServiceFromMauritel.size()>listServicesFromDatabase.size()){
+	  //Save And Update
+	  
+	    }else if(listServicesFromDatabase.size()>listServiceFromMauritel.size()){
+	    	//Blocage
+	    	                this.test();
 		}
-	
 	}
 	
-
+	
+	public void test() throws Exception {
+		 	List<ServiceT>	listServicesFromDatabase=serviceService.getAllServices();
+		 			//Verifier si un Service dans la base de donnée existe chez MAURITEL.
+		    listServiceFromMauritel =rechargeService.getMarketingServices();
+		    Hashtable<String, ServiceDto> HtableFromMauritel = CashHelper.listToHashTableServiceDto(listServiceFromMauritel);
+		    Hashtable<String, ServiceT> serviceLoop = CashHelper.listToHashTableServiceT(listServicesFromDatabase);
+			
+		    // getting keySet() into Set
+	       //  Set<String> setOfServiceCodeServices = serviceLoop.keySet();
+	        
+	        for(ServiceT serviceT : listServicesFromDatabase){
+	        		if(!HtableFromMauritel.contains(serviceT.getCodeService())){
+	        		    ServiceT serviceuPDATE=serviceLoop.get(serviceT.getCodeService());
+	        		    serviceuPDATE.setNotActivated(false);
+	        		    serviceService.save(serviceuPDATE);
+	        		}
+			} 
+	}
 	
 }

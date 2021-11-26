@@ -8,11 +8,8 @@ import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-
 import com.bpm.apimauritel.dtos.RechargeMarketingDto;
-import com.bpm.apimauritel.dtos.ResponseRechargeDto;
 import com.bpm.apimauritel.dtos.ServiceDto;
-import com.bpm.apimauritel.dtos.TokenDto;
 import com.bpm.apimauritel.entities.DetailService;
 import com.bpm.apimauritel.entities.ServiceT;
 import com.bpm.apimauritel.services.CashService;
@@ -107,21 +104,24 @@ public class ApiMauritelApplication implements ApplicationRunner {
 
 		// detailServiceService.save(detailService);
 
+		
 		// cashService.saveService();
 
-		List<ServiceT> listServiceT = serviceService.getAllServices();
-
+        List<ServiceT> listServiceT = serviceService.getAllServices();
+		
 		String amount = "200";
 
-		List<DetailService> filteredServicesT = listServiceT.stream()
-				.flatMap(serviceT -> serviceT.getDetailServices().stream())
+		List<DetailService> filteredServicesT = listServiceT
+				.stream()
+				.flatMap(serviceT -> serviceT.getDetailServices()
+				.stream())
 				.filter(detailService -> detailService.getAmount().equalsIgnoreCase("200"))
 				.collect(Collectors.toList());
 
 	       //	filteredServicesT.forEach(detailService->detailService.getService());
-		System.err.println("Liste Filtered : " + filteredServicesT);
+	//	System.err.println("Liste of services Amount  : " + rechargeService.getMontants(detailServiceService.findAllDetailService()));
 
-		 // System.err.println("Liste Filtered"
+		 // System.err.println("Liste Filtered");
 		// +processingService.getServicesByAmount("500"));
 	}
 

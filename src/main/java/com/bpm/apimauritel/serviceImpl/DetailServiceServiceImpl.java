@@ -2,6 +2,7 @@ package com.bpm.apimauritel.serviceImpl;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,6 +12,7 @@ import com.bpm.apimauritel.entities.DetailService;
 import com.bpm.apimauritel.entities.ServiceT;
 import com.bpm.apimauritel.repositories.DetailServiceRepository;
 import com.bpm.apimauritel.services.DetailServiceService;
+import com.bpm.apimauritel.services.ServiceService;
 
 @Service
 public class DetailServiceServiceImpl implements DetailServiceService {
@@ -20,6 +22,8 @@ public class DetailServiceServiceImpl implements DetailServiceService {
 	@Autowired
 	DetailServiceRepository detailServiceRepository;
 
+	@Autowired
+	ServiceService serviceService;
 
 	@Override
 	public DetailService save(DetailService detailService) throws Exception {
@@ -78,20 +82,49 @@ public class DetailServiceServiceImpl implements DetailServiceService {
 	@Override
 	public List<DetailService> findDetailServiceByAmount(String amount) throws Exception {
 		// TODO Auto-generated method stub
-		return detailServiceRepository.findDetailServiceByAmount(amount);
+	      try {
+	    		return detailServiceRepository.findDetailServiceByAmount(amount);
+		} catch (Exception e) {
+			// TODO: handle exception
+			throw new Exception(e.getMessage());
+		}
 	}
 
 	
 	@Override
 	public List<DetailService> getDetailServiceByAmountAndIdService(String amount,ServiceT serviceT) throws Exception {
 		// TODO Auto-generated method stub
-		return detailServiceRepository.getDetailServiceByAmountAndIdService(amount, serviceT);
+		try {
+			return detailServiceRepository.getDetailServiceByAmountAndIdService(amount, serviceT);
+		} catch (Exception e) {
+			// TODO: handle exception
+			throw new Exception(e.getMessage());
+		}
 	}
 
 	@Override
+	public List<DetailService> findAllDetailService() throws Exception {
+		// TODO Auto-generated method stub
+		try {
+			return detailServiceRepository.findAll();
+		}catch (Exception e) {
+			// TODO: handle exception
+			throw new Exception(e.getMessage());
+		}
+	}
+	
+	
+	@Override
 	public List<DetailService> getDetailServiceByAmount(String amount) throws Exception {
 		// TODO Auto-generated method stub
-		return null;
+        List<ServiceT> listServiceT = serviceService.getAllServices();
+		List<DetailService> filteredServicesT = listServiceT
+				.stream()
+				.flatMap(serviceT -> serviceT.getDetailServices()
+				.stream())
+				.filter(detailService -> detailService.getAmount().equalsIgnoreCase(amount))
+				.collect(Collectors.toList());
+		return filteredServicesT;
 	}
 
 }

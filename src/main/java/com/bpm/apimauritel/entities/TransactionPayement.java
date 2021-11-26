@@ -6,9 +6,18 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import lombok.Data;
+import javax.persistence.ManyToOne;
+import javax.validation.constraints.NotNull;
 
-@Data
+import org.hibernate.annotations.Cascade;
+import org.hibernate.annotations.CascadeType;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
+
+@Getter
+@Setter
 @Entity
 public class TransactionPayement implements Serializable {
 
@@ -18,7 +27,12 @@ public class TransactionPayement implements Serializable {
 	@Id
 	private Long id;
 	
-	private ServiceT serviceT;
+	@ToString.Exclude
+	@ManyToOne
+	@NotNull
+	@Cascade(CascadeType.SAVE_UPDATE)
+	@JsonIgnore
+	private ServiceT service;
 	
 	private String sender;
     private String receiver;
@@ -35,4 +49,7 @@ public class TransactionPayement implements Serializable {
     private String comptabiliser;
     private String facturierId;
     private double solde;
+    
+    
+    
 }

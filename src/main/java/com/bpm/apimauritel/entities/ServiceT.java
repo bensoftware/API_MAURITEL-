@@ -2,6 +2,7 @@ package com.bpm.apimauritel.entities;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.Set;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -9,9 +10,12 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
-import lombok.Data;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.Getter;
+import lombok.Setter;
 
-@Data
+@Getter
+@Setter
 @Entity
 public class ServiceT implements Serializable {
 
@@ -24,7 +28,13 @@ public class ServiceT implements Serializable {
 	@OneToMany(mappedBy = "service", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
 	// @JsonIgnore
 	List<DetailService> detailServices;
+
+	@OneToMany(mappedBy = "service", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
+	@JsonIgnore
+	Set<TransactionPayement> transactionPayement;
+
 	private String codeService;
 	private String codeOperation;
-	
+	private boolean notActivated;
+
 }

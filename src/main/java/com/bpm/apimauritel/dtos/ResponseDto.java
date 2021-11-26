@@ -7,6 +7,8 @@ public class ResponseDto {
 	
 	 private Object response;
 	 
+	 private String message;
+	 
 	 public ResponseDto() {
 			super();
 		}
