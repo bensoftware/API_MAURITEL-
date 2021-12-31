@@ -1,11 +1,11 @@
 package com.bpm.apimauritel.serviceImpl;
 
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,14 +25,15 @@ import com.bpm.apimauritel.dtos.ServiceDto;
 import com.bpm.apimauritel.dtos.TokenDto;
 import com.bpm.apimauritel.dtos.UserDto;
 import com.bpm.apimauritel.entities.DetailService;
-import com.bpm.apimauritel.entities.ServiceT;
 import com.bpm.apimauritel.helpers.RechargeServiceHelper;
+import com.bpm.apimauritel.messages.Message;
 import com.bpm.apimauritel.securities.JWT;
 import com.bpm.apimauritel.services.RechargeService;
 
 @Service
 public class RechargeServiceImpl implements RechargeService {
 
+	
 	public final Logger logger = LoggerFactory.getLogger(RechargeServiceImpl.class);
 
 	@Autowired
@@ -53,28 +54,32 @@ public class RechargeServiceImpl implements RechargeService {
 	public String checkStatus() throws Exception {
 		final String baseUrl = host + "/" + "bm/api/check";
 		ResponseEntity<String> response = null;
-		String result = "";
 		try {
 			response = restTemplate.exchange(baseUrl, HttpMethod.GET, null, String.class);
+			logger.info("MAURITEL RESPONSE STATUS : " + response.getBody());
+
 			if (response.getStatusCode() == HttpStatus.OK) {
 				return response.getBody();
+			}else{
+				throw new Exception("Exception Code erreur : " + response.getStatusCode());
 			}
-			logger.info("MAURITEL RESPONSE STATUS : " + response.getStatusCode());
 		} catch (Exception e) {
+			logger.info("EXCEPTION " + e.getMessage());
 			throw new Exception(e.getMessage());
 		}
-		return response.getBody();
+		
 	}
 
 	
 	@Override
 	public TokenDto authentication() throws Exception {
-		
-		if(!this.checkStatus().equals("1")) {
-			throw new Exception("MAURITEL SERVICE IS DOWN ");
+
+		if (this.checkStatus().equals(Message.MAURITEL_SERVER_DOWN)) {
+			logger.info("STATUS == " + this.checkStatus() + "  " +  Message.MESSAGE_MAURITEL_SERVER_DOWN);
+			throw new Exception(Message.MESSAGE_MAURITEL_SERVER_DOWN);
 		}
-		
-		UserDto userDto = new UserDto(username, password);
+
+		UserDto userDto = new UserDto(username,password);
 
 		String url = host + "/" + "bm/authenticate";
 
@@ -85,33 +90,38 @@ public class RechargeServiceImpl implements RechargeService {
 
 		try {
 			ResponseEntity<TokenDto> response = restTemplate.postForEntity(url, request, TokenDto.class);
+			logger.info("MAURITEL RESPONSE STATUS : " + response.getStatusCode());
+
 			if (response.getStatusCode() == HttpStatus.OK) {
 				if (response.getBody() != null) {
 					token = response.getBody();
-					logger.info("TOKEN : " + token);
+					logger.info("TOKEN VALUE : " + token);
 				}
+			}else {
+				throw new Exception("Code Erreur : "+response.getStatusCode());
 			}
 		} catch (Exception e) {
-			throw new Exception("Exception when calling MAURITEL API : " + e.getMessage());
+			logger.info(Message.EXECPTION_CALL_MAURITEL_SERVER +  e.getMessage());
+			throw new Exception(Message.EXECPTION_CALL_MAURITEL_SERVER +  e.getMessage());
 		}
 		return token;
 	}
-	
-	
-	
 
+	
 	@Override
 	public List<ServiceDto> getMarketingServices() throws Exception {
-	
-		if(!this.checkStatus().equals("1")) {
-			throw new Exception("MAURITEL SERVICE IS DOWN ");
+
+		if (this.checkStatus().equals(Message.MAURITEL_SERVER_DOWN)) {
+			logger.info("STATUS == " + this.checkStatus() + "  " +  Message.MESSAGE_MAURITEL_SERVER_DOWN);
+			throw new Exception(Message.MESSAGE_MAURITEL_SERVER_DOWN);
 		}
-		
-		if(this.token==null) {
-			this.token=this.authentication();
+
+		if (this.token == null) {
+			this.token = this.authentication();
+			logger.info("RE-AUTHENTICATION");
 		}
-		
-		if(!JWT.iSJwtTimeValid(JWT.getExpirationTime(this.token))) {
+
+		if (!JWT.iSJwtTimeValid(JWT.getExpirationTime(this.token))){
 			token = authentication();
 		}
 
@@ -131,36 +141,37 @@ public class RechargeServiceImpl implements RechargeService {
 
 					for (Object x : listObjet) {
 						Map<String, String> map = (Map<String, String>) x;
-						
-						System.err.println(""+map);
-						
+
+						System.err.println("" + map);
+
 						serviceDtos.add(new ServiceDto(map.get("Service"), map.get("CodeOperation"),
 								map.get("Description"), map.get("Amount")));
 					}
 				}
-			}
+			}else{
+				throw new Exception("Exception Code erreur : " + response.getStatusCode());
+		    }
 		} catch (Exception e) {
+			logger.info(e.getMessage());
 			throw new Exception(e.getMessage());
 		}
 		return serviceDtos;
 	}
 
 	
-	
-	
-	
 	@Override
 	public ResponseRechargeDto rechargeParServiceMarketing(RechargeMarketingDto rechargeMarketingDto) throws Exception {
-	
-		if(!this.checkStatus().equals("1")) {
-			throw new Exception("MAURITEL SERVICE IS DOWN ");
+
+		if (this.checkStatus().equals(Message.MAURITEL_SERVER_DOWN)) {
+			logger.info("STATUS == " + this.checkStatus() + "  " +  Message.MESSAGE_MAURITEL_SERVER_DOWN);
+			throw new Exception(Message.MESSAGE_MAURITEL_SERVER_DOWN);
 		}
-		
-		if(this.token==null) {
-			this.token=this.authentication();
+
+		if (this.token == null) {
+			this.token = this.authentication();
 		}
-		
-		if (!JWT.iSJwtTimeValid(JWT.getExpirationTime(this.token))){
+
+		if (!JWT.iSJwtTimeValid(JWT.getExpirationTime(this.token))) {
 			this.token = authentication();
 		}
 
@@ -180,62 +191,62 @@ public class RechargeServiceImpl implements RechargeService {
 				rechargeDto = response.getBody();
 			}
 		} catch (Exception e) {
+			logger.info(e.getMessage());
 			throw new Exception("Exception : " + e.getMessage());
 		}
 		return rechargeDto;
 	}
 
-	
 	@Override
 	public ResponseRechargeDto rechargeClassique(RechargeClassiqueDto rechargeClassiqueDto) throws Exception {
-	
-		if(!this.checkStatus().equals("1")) {
-			throw new Exception("MAURITEL SERVICE IS DOWN ");
+
+		// Disponibilité du service
+		if (this.checkStatus().equals(Message.MAURITEL_SERVER_DOWN)) {
+			logger.info(Message.MESSAGE_MAURITEL_SERVER_DOWN);
+			throw new Exception(Message.MESSAGE_MAURITEL_SERVER_DOWN);
 		}
-		
-		if(this.token==null) {
-			this.token=this.authentication();
+
+		// Test de validité du token
+		if (this.token == null) {
+			this.token = this.authentication();
 		}
-		
+
 		if (!JWT.iSJwtTimeValid(JWT.getExpirationTime(this.token))) {
 			this.token = authentication();
 		}
-		
+
 		HttpHeaders headers = RechargeServiceHelper.getHeaders(this.token);
 
 		HttpEntity<String> entete = new HttpEntity<>(headers);
 
 		Map<String, String> params = RechargeServiceHelper.getParamettersRechargeClassique(rechargeClassiqueDto);
 
-		String URL = host + "/bm/api/recharge/";
-
-		ResponseRechargeDto rechargeDto = new ResponseRechargeDto();
-
+		String URL = host + "/bm/api/recharge/?sender="+rechargeClassiqueDto.getSender()+"&receiver="+rechargeClassiqueDto.getReceiver()+"&amount="+rechargeClassiqueDto.getAmount();
+		
 		try {
-			HttpEntity<ResponseRechargeDto> response = restTemplate.exchange(URL,HttpMethod.GET, entete,
-					ResponseRechargeDto.class, params);
-			if (response.getBody() != null) {
-				rechargeDto = response.getBody();
-				System.err.println("Service rechargeClassique : " + rechargeDto);
+			logger.info("URL GLOBAL --- " + URL);
+			ResponseEntity<ResponseRechargeDto> response = restTemplate.exchange(URI.create(URL) , HttpMethod.GET, entete,
+					ResponseRechargeDto.class);
+			logger.info("Service rechargeClassique RESPONSE HTTP STATUS : " + response.getStatusCode());
+
+			if (response.getStatusCode() == HttpStatus.OK) {
+				return response.getBody();
+			}else{
+				throw new Exception("Exception Code erreur : " + response.getStatusCode());
 			}
 		}catch (Exception e) {
 			throw new Exception("Exception : " + e.getMessage());
 		}
-		return rechargeDto;
 	}
-
 
 	@Override
 	public Set<String> getMontants(List<DetailService> listDetailService) throws Exception {
 		// TODO Auto-generated method stub
-		Set<String> setOfAmount=new HashSet<>();
-		for (DetailService detailService : listDetailService) {
+		Set<String> setOfAmount = new HashSet<>();
+		for (DetailService detailService : listDetailService){
 			setOfAmount.add(detailService.getAmount());
 		}
 		return setOfAmount;
 	}
-	
-	
-	
 
 }

@@ -3,7 +3,6 @@ package com.bpm.apimauritel.serviceImpl;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.Set;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,12 +42,11 @@ public class CashServiceImpl implements CashService {
 		Hashtable<String, String> serviceSaved = new Hashtable<>();
 
 		for (ServiceDto serviceDto : listServiceFromMauritel) {
-			// CodeService == au code unique qui identifie un service venant de l'API MAURITEL
+							// CodeService == au code unique qui identifie un service venant de l'API MAURITEL
 			if (!serviceSaved.contains(serviceDto.getService())){
 				serviceT = new ServiceT();
 				serviceT.setCodeOperation(serviceDto.getCodeOperation());
 				serviceT.setCodeService(serviceDto.getService());
-
 				ServiceT service=serviceService.findServiceByCodeService(serviceDto.getService());
 				if(service==null) {
 					
@@ -77,14 +75,14 @@ public class CashServiceImpl implements CashService {
 	public void saveDetailService(ServiceT serviceT) throws Exception {
 		DetailService detailService = null;
 		for (ServiceDto serviceDto : listServiceFromMauritel) {
-			//System.err.println("");
-			if (serviceDto.getService().equalsIgnoreCase(serviceT.getCodeService()) ) {
+								//System.err.println("");
+			 if(serviceDto.getService().equalsIgnoreCase(serviceT.getCodeService())) {
 				detailService = new DetailService();
 				detailService.setAmount(serviceDto.getAmount());
 				detailService.setDescription(serviceDto.getDescription());
 				detailService.setService(serviceT);
 				try {
-				DetailService	detailServiceTest = detailServiceService.findDetailServiceByDescription(serviceDto.getDescription());
+				DetailService detailServiceTest = detailServiceService.findDetailServiceByDescription(serviceDto.getDescription());
 					if(detailServiceTest == null){
 						 //On insert le DetailService pour ce service,serviceT.	
 						detailServiceService.save(detailService);
@@ -96,7 +94,7 @@ public class CashServiceImpl implements CashService {
 						detailService.setService(serviceT);
 						detailServiceService.save(detailService);
 					}
-				} catch (Exception e) {
+				}catch (Exception e) {
 					throw new Exception(e.getMessage());
 				}
 			}
@@ -107,53 +105,43 @@ public class CashServiceImpl implements CashService {
 
 	@Override
 	public void Upadate() throws Exception {
-		// TODO Auto-generated method stub
-		
+		           
 	    List<ServiceT>	listServicesFromDatabase=serviceService.getAllServices();
-	
-	  //Verifier si un Service dans la base de donnée existe chez MAURITEL.
+
+	                   //Verifier si un Service dans la base de donnée existe chez MAURITEL.
 
 	    Hashtable<String, ServiceT> serviceTempo = new Hashtable<>();
-	    
-	    
 	    Hashtable<String, ServiceT> serviceLoop = CashHelper.listToHashTableServiceT(listServicesFromDatabase);
-		
-	 // getting keySet() into Set
+	    		// getting keySet() into Set
         Set<String> setOfServiceCodeService = serviceLoop.keySet();
-        
         
 	    listServiceFromMauritel =rechargeService.getMarketingServices();
 	
 	    ServiceT serviceTForUpdate =null;
 	    
 	    //Mise à Jour
-	    if(listServicesFromDatabase.size() == listServiceFromMauritel.size() || listServiceFromMauritel.size()>listServicesFromDatabase.size()){
+	    if(listServicesFromDatabase.size()==listServiceFromMauritel.size() || listServiceFromMauritel.size()>listServicesFromDatabase.size()){
 	  //Save And Update
-	  
 	    }else if(listServicesFromDatabase.size()>listServiceFromMauritel.size()){
-	    	//Blocage
-	    	                this.test();
+    //Blocage du service au niveau de la base de donnée Local si le service n'existe plus chez MAURITEL
+	    		this.deActivateService();
 		}
 	}
 	
-	
-	public void test() throws Exception {
+	public void deActivateService() throws Exception {
 		 	List<ServiceT>	listServicesFromDatabase=serviceService.getAllServices();
-		 			//Verifier si un Service dans la base de donnée existe chez MAURITEL.
+       // Verifier si un Service dans la base de donnée existe chez MAURITEL.
 		    listServiceFromMauritel =rechargeService.getMarketingServices();
 		    Hashtable<String, ServiceDto> HtableFromMauritel = CashHelper.listToHashTableServiceDto(listServiceFromMauritel);
-		    Hashtable<String, ServiceT> serviceLoop = CashHelper.listToHashTableServiceT(listServicesFromDatabase);
-			
-		    // getting keySet() into Set
-	       //  Set<String> setOfServiceCodeServices = serviceLoop.keySet();
-	        
+		    Hashtable<String, ServiceT>   serviceLoop = CashHelper.listToHashTableServiceT(listServicesFromDatabase);
 	        for(ServiceT serviceT : listServicesFromDatabase){
 	        		if(!HtableFromMauritel.contains(serviceT.getCodeService())){
-	        		    ServiceT serviceuPDATE=serviceLoop.get(serviceT.getCodeService());
-	        		    serviceuPDATE.setNotActivated(false);
-	        		    serviceService.save(serviceuPDATE);
+	        		    ServiceT serviceUPDATE=serviceLoop.get(serviceT.getCodeService());
+	        		    serviceUPDATE.setNotActivated(false);
+	        		    serviceService.save(serviceUPDATE);
 	        		}
 			} 
 	}
+	
 	
 }

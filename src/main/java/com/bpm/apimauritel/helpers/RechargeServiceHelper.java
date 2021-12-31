@@ -1,5 +1,6 @@
 package com.bpm.apimauritel.helpers;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -12,52 +13,59 @@ import com.bpm.apimauritel.dtos.TokenDto;
 import com.bpm.apimauritel.entities.TransactionPayement;
 
 public class RechargeServiceHelper {
-	
-	
+
 	public static HttpHeaders getHeaders(TokenDto token) {
-		HttpHeaders headers= new HttpHeaders();
-		headers.setContentType(MediaType.APPLICATION_JSON);		
+		HttpHeaders headers = new HttpHeaders();
+		headers.setContentType(MediaType.APPLICATION_JSON);
 		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
-		headers.set("Authorization","Bearer " + token.getToken());
+		headers.set("Authorization", "Bearer " + token.getToken());
 		return headers;
 	}
-	
-	public static  Map<String, String> getParametters(RechargeMarketingDto rechargeMarketingDto) {
+
+	public static Map<String, String> getParametters(RechargeMarketingDto rechargeMarketingDto) {
 		// TODO Auto-generated method stub
 		Map<String, String> params = new HashMap();
 		params.put("sender", rechargeMarketingDto.getSender());
-		params.put("receiver",rechargeMarketingDto.getReceiver());
+		params.put("receiver", rechargeMarketingDto.getReceiver());
 		params.put("amount", rechargeMarketingDto.getAmount());
 		params.put("service", rechargeMarketingDto.getCodeService());
 		return params;
 	}
-	
-	public static  Map<String, String> getParamettersRechargeClassique(RechargeClassiqueDto rechargeClassiqueDto) {
+
+	public static Map<String, String> getParamettersRechargeClassique(RechargeClassiqueDto rechargeClassiqueDto) {
 		// TODO Auto-generated method stub
 		Map<String, String> params = new HashMap();
 		params.put("sender", rechargeClassiqueDto.getSender());
-		params.put("receiver",rechargeClassiqueDto.getReceiver());
+		params.put("receiver", rechargeClassiqueDto.getReceiver());
 		params.put("amount", rechargeClassiqueDto.getAmount());
 		return params;
 	}
-	
-	
-	public static  TransactionPayement bindTransactionPayement(RechargeMarketingDto rechargeMarketingDto) {
-		
-		TransactionPayement transactionPayement=new TransactionPayement();
-		
-		//transactionPayement.setAmountPay(Double.parseDouble(rechargeMarketingDto.getAmount()));
-		
-		transactionPayement.setAmountPay(85);
-		
+
+	public static TransactionPayement bindTransactionPayement(RechargeMarketingDto rechargeMarketingDto,
+			String typeRecharge) {
+
+		TransactionPayement transactionPayement = new TransactionPayement();
+		// transactionPayement.setAmountPay(Double.parseDouble(rechargeMarketingDto.getAmount()));
+		transactionPayement.setTypeRecharge("MARKETING");
+		transactionPayement.setAmountPay(Double.parseDouble(rechargeMarketingDto.getAmount()));
+		transactionPayement.setTransactionDate(new Date());
 		transactionPayement.setTransactionId(rechargeMarketingDto.getIdTransction());
-		
 		transactionPayement.setSender(rechargeMarketingDto.getSender());
-		
 		transactionPayement.setReceiver(rechargeMarketingDto.getReceiver());
-		
 		return transactionPayement;
 	}
-	
+
+	public static TransactionPayement bindClassicTransactionPayement(RechargeClassiqueDto rechargeClassiqueDto,
+			String typeRecharge) {
+		TransactionPayement transactionPayement = new TransactionPayement();
+		// transactionPayement.setAmountPay(Double.parseDouble(rechargeMarketingDto.getAmount()));
+		transactionPayement.setTypeRecharge("CLASSIQUE");
+		transactionPayement.setAmountPay(Double.parseDouble(rechargeClassiqueDto.getAmount()));
+		transactionPayement.setTransactionDate(new Date());
+		transactionPayement.setTransactionId(rechargeClassiqueDto.getIdTransction());
+		transactionPayement.setSender(rechargeClassiqueDto.getSender());
+		transactionPayement.setReceiver(rechargeClassiqueDto.getReceiver());
+		return transactionPayement;
+	}
 
 }

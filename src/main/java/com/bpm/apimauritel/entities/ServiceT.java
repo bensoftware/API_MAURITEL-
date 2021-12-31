@@ -13,9 +13,11 @@ import javax.persistence.OneToMany;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 @Getter
 @Setter
+@ToString //Was Added Recently
 @Entity
 public class ServiceT implements Serializable {
 

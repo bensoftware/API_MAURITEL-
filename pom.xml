@@ -177,7 +177,7 @@
 				</configuration>
 			</plugin>
 		</plugins>
-		<finalName>API_MAURITEL</finalName>
+		<finalName>apiMauritel</finalName>
 	</build>
 
 </project>

@@ -9,8 +9,11 @@ import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
 import org.apache.http.conn.ssl.TrustStrategy;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.support.ReloadableResourceBundleMessageSource;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.http.client.SimpleClientHttpRequestFactory;
 import org.springframework.web.client.RestTemplate;
@@ -24,6 +27,9 @@ import io.swagger.v3.oas.models.security.SecurityScheme;
 @Configuration
 public class Config {
 
+	@Value("${url.message.fr}") 
+	private   String urlMessage;
+	
 	// For Production Purpose
 	public RestTemplate getRest2() {
 		SimpleClientHttpRequestFactory factory = new SimpleClientHttpRequestFactory();
@@ -31,8 +37,18 @@ public class Config {
 		factory.setReadTimeout(1200000);
 		return new RestTemplate(factory);
 	}
+	
+	
+	@Bean
+	public MessageSource messageSource() {
+		ReloadableResourceBundleMessageSource messageSource = new ReloadableResourceBundleMessageSource();
+		messageSource.setBasenames(urlMessage);
+		messageSource.setDefaultEncoding("UTF-8");
+		return messageSource;
+	}
 
-	// For Development purpose,it allows us to make request to https links.
+	 // For Development purpose,it allows us to make request to https links.
+	//We have to comment it before going in production
 	@Bean
 	public RestTemplate getRestTemplate() throws KeyStoreException, NoSuchAlgorithmException, KeyManagementException {
 		TrustStrategy acceptingTrustStrategy = (x509Certificates, s) -> true;

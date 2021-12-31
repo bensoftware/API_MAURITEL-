@@ -8,7 +8,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.validation.constraints.NotNull;
-
 import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.CascadeType;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -33,23 +32,19 @@ public class TransactionPayement implements Serializable {
 	@Cascade(CascadeType.SAVE_UPDATE)
 	@JsonIgnore
 	private ServiceT service;
-	
-	private String sender;
-    private String receiver;
-    private double amountPay;
-    private String statusPayement;
-    private String transactionId;
-    private String errorMessage;
-    private Date   transactionDate;
-    private String idTransaction;
+	private String 	sender;
+    private String 	receiver;
+    private double 	amountPay;
+    private String 	statusPayement;
+    private String 	transactionId;
+    private String 	errorMessage;
+    private Date   	transactionDate;
+    private boolean success;
+    private String  typeRecharge;
     
     ///--OPTIONAL FOR NOW
-    private String billNumber;
-    private String billerId;
-    private String comptabiliser;
-    private String facturierId;
-    private double solde;
-    
-    
+	/*
+	 * private String comptabiliser; private double solde;
+	 */
     
 }

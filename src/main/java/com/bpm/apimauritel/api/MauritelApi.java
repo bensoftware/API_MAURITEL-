@@ -8,6 +8,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -22,13 +24,16 @@ import com.bpm.apimauritel.entities.DetailService;
 import com.bpm.apimauritel.entities.ServiceT;
 import com.bpm.apimauritel.entities.TransactionPayement;
 import com.bpm.apimauritel.helpers.RechargeServiceHelper;
+import com.bpm.apimauritel.messages.Message;
 import com.bpm.apimauritel.services.DetailServiceService;
 import com.bpm.apimauritel.services.RechargeService;
+import com.bpm.apimauritel.services.SecurityService;
 import com.bpm.apimauritel.services.ServiceService;
 import com.bpm.apimauritel.services.TransactionPayementService;
 import io.swagger.v3.oas.annotations.Operation;
 
 @RestController
+@RequestMapping("/api/V1")
 @CrossOrigin("*")
 public class MauritelApi {
 
@@ -47,161 +52,203 @@ public class MauritelApi {
 	DetailServiceService detailServiceService;
 
 	@Autowired
+	SecurityService securityService;
+
+	@Autowired
 	TransactionPayementService transactionPayementService;
 
-	@RequestMapping(value = "/", produces = {"application/json"}, method = RequestMethod.GET)
+	@RequestMapping(value = "", produces = { "application/json" }, method = RequestMethod.GET)
 	public String Welcome() {
-		return "MAURITEL API is UP";
+		return "MAURITEL API is UP...V1";
 	}
 
-	@Operation(summary = "BPM ***Get all services ")
-	@RequestMapping(value = "/getAllMargetingService", produces = {"application/json"}, method = RequestMethod.GET)
+	@Operation(summary = "BPM ***GET ALL SERVICES ")
+	@GetMapping(value = "/marketingServices", produces = { "application/json" })
 	public @ResponseBody ResponseDto getAllMargetingService() throws Exception {
 		List<ServiceT> listServiceT = new ArrayList<>();
+		// TEST API key
+		// TEST IP AUTHPORIZED
+
+		// IP :If Ip Adress is not allowed
+		if (!securityService.checkIP(httpServletRequest.getRemoteHost())) {
+			throw new Exception("IP ADRESS NOT ALLOWED");
+		}
+
 		try {
 			listServiceT = serviceService.getAllServices();
 		} catch (Exception e) {
-			// TODO: handle exception
 			throw new Exception(e.getMessage());
 		}
 		return new ResponseDto(listServiceT);
 	}
 
 	
-
+	
 	@Operation(summary = "BPM *** Get Details Service By using the service ID")
-	@RequestMapping(value = "/getDetailServicesByIdService/", produces = {"application/json"}, method = RequestMethod.GET)
+	@GetMapping(value = "/detailServices", produces = { "application/json" })
 	public ResponseDto getDetailServicesByIdService(@RequestParam(name = "idService", required = true) Long idService)
 			throws Exception {
-
-		logger.info("GET DETAIL SERVICE IN : " + idService.longValue());
-
+		logger.info("GET DETAIL SERVICE  [IN]  : " + idService.longValue());
+		// TEST API key
+		// TEST IP AUTHPORIZED
+		if (idService == 0.0) {
+			logger.error("Service's ID is NULL");
+			throw new Exception("ID is NULL");
+		}
 		ServiceT serviceT = new ServiceT();
 		serviceT.setId(idService);
-
 		List<DetailService> listDetailServices = new ArrayList<>();
 		try {
 			listDetailServices = detailServiceService.findByService(serviceT);
 			logger.info("LISTE DES DETAILS SERVICE OU TYPE DE SERVICE " + listDetailServices);
-		}catch (Exception e) {
+		} catch (Exception e) {
 			logger.warn(e.getMessage());
 			throw new Exception(e.getMessage());
 		}
-
 		logger.info("GET DETAIL SERVICE  [OUT]  : " + listDetailServices);
-
 		return new ResponseDto(listDetailServices);
 	}
 
-	@Operation(summary = "BPM ** List of all amount ")
-	@RequestMapping(value = "/getAmounts", produces = {"application/json"}, method = RequestMethod.GET)
+	
+	@Operation(summary = "BPM ** List of all amounts ")
+	@GetMapping(value = "/amounts", produces = { "application/json" })
 	public ResponseDto getAmounts() throws Exception {
-
-		ResponseDto responseDto =new ResponseDto();
+		ResponseDto responseDto = new ResponseDto();
 		logger.info("GET DETAIL SERVICE  AMOUNT [IN]    : ");
+		// TEST API key
+		// TEST IP AUTHPORIZED
 		try {
-			List<DetailService> listDetailServices=detailServiceService.findAllDetailService();
+			List<DetailService> listDetailServices = detailServiceService.findAllDetailService();
 			responseDto.setResponse(listDetailServices);
 		} catch (Exception e) {
-			// TODO: handle exception
 			throw new Exception(e.getMessage());
 		}
-	
-		///responseDto.setResponse(listDetailServices);
+		// responseDto.setResponse(listDetailServices);
 		logger.info("GET DETAIL SERVICE AMOUNT  [OUT]   : ");
-		 return responseDto;
+		return responseDto;
 	}
 
 	
-	@RequestMapping(value = "/getDetailServicesByAmount/", produces = {"application/json" }, method = RequestMethod.GET)
+	@GetMapping(value = "/detailServices/{amount}", produces = { "application/json" })
 	public ResponseDto getDetailServicesByAmount(@RequestParam(name = "amount", required = true) Long amount)
 			throws Exception {
-
 		logger.info("GET DETAIL SERVICE BY AMOUT [IN]   : " + amount.longValue());
+		// TEST API key
+		// TEST IP AUTHPORIZED
+		ResponseDto responseDto = new ResponseDto();
+		List<DetailService> detailService = detailServiceService.getDetailServiceByAmount(String.valueOf(amount));
 
-		ResponseDto responseDto =new ResponseDto();
-	    List<DetailService> detailService=  detailServiceService.getDetailServiceByAmount(String.valueOf(amount));
-	    
-	    if(detailService.size()==0) {
-	    	throw new Exception("Aucun service n'est disponible à ce montant !!! ");
-	    }
-	    
+		if (detailService.size() == 0) {
+			throw new Exception("Aucun service n'est disponible à ce montant !!! ");
+		}
+		logger.info("GET DETAIL SERVICE BY AMOUT [OUT]   : " + detailService);
 		return new ResponseDto(detailService);
 	}
-	
-	
-
-	@Operation(summary = "BPM ***  ")
-	@RequestMapping(value = "/rechargeClassique", produces = { "application/json" }, method = RequestMethod.POST)
-	public @ResponseBody ResponseDto rechargeClassique(@Valid @RequestBody RechargeClassiqueDto rechargeClassiqueDto)
-			throws Exception {
-		ResponseRechargeDto responseRechargeDto = new ResponseRechargeDto();
-
-		if (rechargeClassiqueDto == null) {
-			throw new Exception("Les Informations sur le formulaire sont vides ");
-		}
-
-		// TEST API key
-
-		// TEST IP AUTHPORIZED
-
-		// Disponibilite du service ou stock
-
-		// Save Transaction
-
-		responseRechargeDto = rechargeService.rechargeClassique(rechargeClassiqueDto);
-
-		System.err.println("Response in the Controller : " + responseRechargeDto);
-		return new ResponseDto(responseRechargeDto);
-	}
 
 	
 	
-	@RequestMapping(value = "/rechargeMargetingService", produces = { "application/json" }, method = RequestMethod.POST)
+	@Operation(summary = "BPM ***Create a transaction ")
+	@PostMapping(value = "/marketing", produces = { "application/json" })
 	public ResponseDto RechargeMargetingService(@RequestBody RechargeMarketingDto rechargeMarketingDto)
 			throws Exception {
-
 		// Test API key
-
-	   // Test IP AUTHPORIZED
-	
+		// Test IP AUTHPORIZED
 		ResponseRechargeDto responseRechargeDto = new ResponseRechargeDto();
-		System.err.println("In rechargeMarketingDto   "    +  rechargeMarketingDto);
-		
 		logger.info(" RECHARGE MARKETING SERVICE [IN]  : " + rechargeMarketingDto);
 
 		if (rechargeMarketingDto == null) {
-			throw new Exception(" Les Informations sur le formulaire sont vides !!! ");
+			throw new Exception("Les Informations sur le formulaire sont vides !!! ");
 		}
-         
-		ServiceT serviceT = null;
+		ServiceT serviceT = new ServiceT();
 		try {
-			 serviceT = serviceService.findServiceByCodeService(rechargeMarketingDto.getService());
+			serviceT = serviceService.findServiceByCodeService(rechargeMarketingDto.getService());
 		} catch (Exception e) {
-			// TODO: handle exception
+			logger.error(" EXCEPTION  : " + e.getMessage());
 			throw new Exception(e.getMessage());
 		}
-		
-        if(serviceT==null) {
-        	throw new Exception("Ce service Mauritel n'existe pas ou n'est pas disponible !!! ");
-        }
-        
-	    TransactionPayement transactionPayement=RechargeServiceHelper.bindTransactionPayement(rechargeMarketingDto);
-	    transactionPayement.setService(serviceT);
+		if (serviceT == null) {
+			throw new Exception(Message.ERROR_UNKNOWN_SERVICE);
+		}
 
-	    System.err.println("In serviceT        : "    +  serviceT);
-	    try {
-	    	System.err.println("In Payement    : "    +  transactionPayement);
-	    	transactionPayementService.save(transactionPayement);
-		}catch (Exception e){
-			throw new Exception(e.getMessage());
-		}
+		TransactionPayement transactionPayement = RechargeServiceHelper.bindTransactionPayement(rechargeMarketingDto,
+				"MARKETING");
+		transactionPayement.setService(serviceT);
+		System.err.println("In serviceT        : " + serviceT);
 		responseRechargeDto = rechargeService.rechargeParServiceMarketing(rechargeMarketingDto);
+		try {
+			System.err.println("In Payement    : " + transactionPayement);
+			if (responseRechargeDto.isSuccess()) {
+				transactionPayement.setSuccess(true);
+				transactionPayementService.save(transactionPayement);
 
+			} else {
+				transactionPayement.setErrorMessage(responseRechargeDto.getMessage());
+				transactionPayementService.save(transactionPayement);
+			}
+		} catch (Exception e) {
+			logger.error(" EXCEPTION  : " + e.getMessage());
+			throw new Exception(e.getMessage());
+		}
 		logger.info(" RECHARGE MARKETING SERVICE [OUT]  : " + responseRechargeDto);
-		
 		return new ResponseDto(responseRechargeDto);
 	}
+
 	
+	@Operation(summary = "BPM ***  ")
+	@PostMapping(value = "/classique", produces = { "application/json" })
+	public @ResponseBody ResponseDto rechargeClassique(@Valid @RequestBody RechargeClassiqueDto rechargeClassiqueDto)
+			throws Exception {
+
+		ResponseRechargeDto responseRechargeDto = new ResponseRechargeDto();
+		logger.info("RECHARGE CLASSIQUE [IN] : " + rechargeClassiqueDto);
+		
+		if (rechargeClassiqueDto == null) {
+			throw new Exception("Les Informations sur le formulaire sont vides");
+		}
+		 // TEST API key
+		// TEST IP AUTHPORIZED
+		
+		if(!securityService.checkIP(httpServletRequest.getRemoteHost())) {
+			throw new Exception("IP ADRESS NOT ALLOWED");
+		}
+
+		// DISPONIBILITE DU SERVICE OU STOCK  to ignore
+		
+		ServiceT serviceT = new ServiceT();
+		try {
+			//SERVICE RECHARGE-CLASSIQUE
+			serviceT = serviceService.findServiceByCodeService("100");
+		} catch (Exception e) {
+			logger.error(" EXCEPTION  : " + e.getMessage());
+			throw new Exception(e.getMessage());
+		}
+		
+		TransactionPayement transactionPayement=null;
+		try {
+			responseRechargeDto = rechargeService.rechargeClassique(rechargeClassiqueDto);
+			transactionPayement = RechargeServiceHelper
+					.bindClassicTransactionPayement(rechargeClassiqueDto, "CLASSIQUE");
+		} catch (Exception e) {
+			// TODO: handle exception
+			logger.info("EXCEPTION : " + e.getMessage());
+		}
+		
+		try {
+			
+			if (responseRechargeDto.isSuccess()) {
+				transactionPayement.setService(serviceT);
+				transactionPayement.setSuccess(true);
+				transactionPayementService.save(transactionPayement);
+			}else{
+				transactionPayement.setService(serviceT);
+				transactionPayement.setErrorMessage(responseRechargeDto.getMessage());
+				transactionPayementService.save(transactionPayement);
+			}
+		}catch (Exception e) {
+			logger.info(e.getMessage());
+		}
+		logger.info("RECHARGE CLASSIQUE [OUT] : " + rechargeClassiqueDto);
+		return new ResponseDto(responseRechargeDto);
+	}
 
 }

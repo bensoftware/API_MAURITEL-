@@ -21,10 +21,6 @@ import com.bpm.apimauritel.services.ServiceService;
 @SpringBootApplication
 public class ApiMauritelApplication implements ApplicationRunner {
 
-	public static void main(String[] args) {
-		SpringApplication.run(ApiMauritelApplication.class, args);
-	}
-
 	@Autowired
 	RechargeService rechargeService;
 
@@ -39,6 +35,11 @@ public class ApiMauritelApplication implements ApplicationRunner {
 
 	@Autowired
 	ProcessingService processingService;
+	
+	public static void main(String[] args) {
+		SpringApplication.run(ApiMauritelApplication.class, args);
+	}
+
 
 	@Override
 	public void run(ApplicationArguments args) throws Exception {
@@ -53,10 +54,9 @@ public class ApiMauritelApplication implements ApplicationRunner {
 		 
     		
 	//	ResponseRechargeDto responseRechargeDto= rechargeService.rechargeParServiceMarketing(rechargeMarketingDto);
-   //System.err.println("Response : "+responseRechargeDto);
-		
+   //System.err.println("Response : "+responseRechargeDto);	
+  //		
  //		
-//		
 		// --test getMarketingServices
 		List<ServiceDto> serviceDtoList = new ArrayList<>();
 		// serviceDtoList=rechargeService.getMarketingServices(rechargeService.authentication(userDto));
@@ -119,9 +119,8 @@ public class ApiMauritelApplication implements ApplicationRunner {
 				.collect(Collectors.toList());
 
 	       //	filteredServicesT.forEach(detailService->detailService.getService());
-	//	System.err.println("Liste of services Amount  : " + rechargeService.getMontants(detailServiceService.findAllDetailService()));
-
-		 // System.err.println("Liste Filtered");
+		  //	System.err.println("Liste of services Amount  : " + rechargeService.getMontants(detailServiceService.findAllDetailService()));
+		System.err.println("Liste Filtered" +processingService.getServicesByAmount("500"));
 		// +processingService.getServicesByAmount("500"));
 	}
 

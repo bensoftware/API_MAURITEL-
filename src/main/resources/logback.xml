@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
  
- <property name="LOG_PATH" value="/home/microservice/log/API_MAURITEL"/>
+ <property name="LOG_PATH" value="/home/microservice/log/api_recharge_mauritel"/>
   
   <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
     <encoder>

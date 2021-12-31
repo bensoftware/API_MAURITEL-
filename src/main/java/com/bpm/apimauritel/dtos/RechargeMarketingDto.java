@@ -10,8 +10,7 @@ public class RechargeMarketingDto {
 	private String amount;
 	private String codeService;
 	private String service;
-	
 	private String idTransction;
-	private String operateur ;
+	
 	 
 }

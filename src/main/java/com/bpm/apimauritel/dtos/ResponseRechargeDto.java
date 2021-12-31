@@ -4,6 +4,6 @@ import lombok.Data;
 
 @Data
 public class ResponseRechargeDto {
-	private String success;
+	private boolean success;
 	private String message;
 }
