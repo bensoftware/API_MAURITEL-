@@ -36,14 +36,14 @@ public class ApiMauritelApplication implements ApplicationRunner {
 	@Autowired
 	ProcessingService processingService;
 	
+	
 	public static void main(String[] args) {
 		SpringApplication.run(ApiMauritelApplication.class, args);
 	}
-
+	
 
 	@Override
 	public void run(ApplicationArguments args) throws Exception {
-
 
 		 // --test rechargeParServiceMarketing
 		RechargeMarketingDto rechargeMarketingDto=new RechargeMarketingDto();
@@ -52,7 +52,6 @@ public class ApiMauritelApplication implements ApplicationRunner {
 		rechargeMarketingDto.setSender("37804578");
 		rechargeMarketingDto.setCodeService("1");
 		 
-    		
 	//	ResponseRechargeDto responseRechargeDto= rechargeService.rechargeParServiceMarketing(rechargeMarketingDto);
    //System.err.println("Response : "+responseRechargeDto);	
   //		

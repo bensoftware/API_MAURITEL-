@@ -32,6 +32,7 @@ import com.bpm.apimauritel.services.ServiceService;
 import com.bpm.apimauritel.services.TransactionPayementService;
 import io.swagger.v3.oas.annotations.Operation;
 
+
 @RestController
 @RequestMapping("/api/V1")
 @CrossOrigin("*")
@@ -48,6 +49,7 @@ public class MauritelApi {
 	@Autowired
 	RechargeService rechargeService;
 
+	
 	@Autowired
 	DetailServiceService detailServiceService;
 
@@ -57,16 +59,19 @@ public class MauritelApi {
 	@Autowired
 	TransactionPayementService transactionPayementService;
 
-	@RequestMapping(value = "", produces = { "application/json" }, method = RequestMethod.GET)
+	@RequestMapping(value = "", produces ={"application/json" }, method = RequestMethod.GET)
 	public String Welcome() {
 		return "MAURITEL API is UP...V1";
 	}
 
+	
 	@Operation(summary = "BPM ***GET ALL SERVICES ")
 	@GetMapping(value = "/marketingServices", produces = { "application/json" })
 	public @ResponseBody ResponseDto getAllMargetingService() throws Exception {
 		List<ServiceT> listServiceT = new ArrayList<>();
+		
 		// TEST API key
+		
 		// TEST IP AUTHPORIZED
 
 		// IP :If Ip Adress is not allowed
@@ -89,7 +94,9 @@ public class MauritelApi {
 	public ResponseDto getDetailServicesByIdService(@RequestParam(name = "idService", required = true) Long idService)
 			throws Exception {
 		logger.info("GET DETAIL SERVICE  [IN]  : " + idService.longValue());
+		
 		// TEST API key
+		
 		// TEST IP AUTHPORIZED
 		if (idService == 0.0) {
 			logger.error("Service's ID is NULL");
@@ -115,7 +122,9 @@ public class MauritelApi {
 	public ResponseDto getAmounts() throws Exception {
 		ResponseDto responseDto = new ResponseDto();
 		logger.info("GET DETAIL SERVICE  AMOUNT [IN]    : ");
+		
 		// TEST API key
+		
 		// TEST IP AUTHPORIZED
 		try {
 			List<DetailService> listDetailServices = detailServiceService.findAllDetailService();
@@ -133,7 +142,9 @@ public class MauritelApi {
 	public ResponseDto getDetailServicesByAmount(@RequestParam(name = "amount", required = true) Long amount)
 			throws Exception {
 		logger.info("GET DETAIL SERVICE BY AMOUT [IN]   : " + amount.longValue());
+		
 		// TEST API key
+		
 		// TEST IP AUTHPORIZED
 		ResponseDto responseDto = new ResponseDto();
 		List<DetailService> detailService = detailServiceService.getDetailServiceByAmount(String.valueOf(amount));
@@ -151,7 +162,9 @@ public class MauritelApi {
 	@PostMapping(value = "/marketing", produces = { "application/json" })
 	public ResponseDto RechargeMargetingService(@RequestBody RechargeMarketingDto rechargeMarketingDto)
 			throws Exception {
+		
 		// Test API key
+		
 		// Test IP AUTHPORIZED
 		ResponseRechargeDto responseRechargeDto = new ResponseRechargeDto();
 		logger.info(" RECHARGE MARKETING SERVICE [IN]  : " + rechargeMarketingDto);
@@ -206,6 +219,7 @@ public class MauritelApi {
 			throw new Exception("Les Informations sur le formulaire sont vides");
 		}
 		 // TEST API key
+		
 		// TEST IP AUTHPORIZED
 		
 		if(!securityService.checkIP(httpServletRequest.getRemoteHost())) {
@@ -234,8 +248,7 @@ public class MauritelApi {
 		}
 		
 		try {
-			
-			if (responseRechargeDto.isSuccess()) {
+			if(responseRechargeDto.isSuccess()){
 				transactionPayement.setService(serviceT);
 				transactionPayement.setSuccess(true);
 				transactionPayementService.save(transactionPayement);

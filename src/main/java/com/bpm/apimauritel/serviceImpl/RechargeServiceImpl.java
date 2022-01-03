@@ -30,9 +30,13 @@ import com.bpm.apimauritel.messages.Message;
 import com.bpm.apimauritel.securities.JWT;
 import com.bpm.apimauritel.services.RechargeService;
 
+
+
 @Service
 public class RechargeServiceImpl implements RechargeService {
 
+	 ///Test Purpose 
+	///http://30.30.1.140:8866/api/V1/classique
 	
 	public final Logger logger = LoggerFactory.getLogger(RechargeServiceImpl.class);
 
@@ -67,7 +71,6 @@ public class RechargeServiceImpl implements RechargeService {
 			logger.info("EXCEPTION " + e.getMessage());
 			throw new Exception(e.getMessage());
 		}
-		
 	}
 
 	
@@ -85,7 +88,6 @@ public class RechargeServiceImpl implements RechargeService {
 
 		HttpHeaders headers = new HttpHeaders();
 		headers.setContentType(MediaType.APPLICATION_JSON);
-
 		HttpEntity<UserDto> request = new HttpEntity<>(userDto, headers);
 
 		try {
