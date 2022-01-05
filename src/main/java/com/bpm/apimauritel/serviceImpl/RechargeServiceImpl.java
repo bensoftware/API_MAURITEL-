@@ -65,10 +65,10 @@ public class RechargeServiceImpl implements RechargeService {
 			if (response.getStatusCode() == HttpStatus.OK) {
 				return response.getBody();
 			}else{
-				throw new Exception("Exception Code erreur : " + response.getStatusCode());
+				throw new Exception("EXCEPTION CODE ERREUR : " + response.getStatusCode());
 			}
 		} catch (Exception e) {
-			logger.info("EXCEPTION " + e.getMessage());
+			logger.info("EXCEPTION  " + e.getMessage());
 			throw new Exception(e.getMessage());
 		}
 	}
@@ -100,7 +100,7 @@ public class RechargeServiceImpl implements RechargeService {
 					logger.info("TOKEN VALUE : " + token);
 				}
 			}else {
-				throw new Exception("Code Erreur : "+response.getStatusCode());
+				throw new Exception("EXCEPTION WHEN GETTING THE TOKEN: "+response.getStatusCode());
 			}
 		} catch (Exception e) {
 			logger.info(Message.EXECPTION_CALL_MAURITEL_SERVER +  e.getMessage());
@@ -204,43 +204,51 @@ public class RechargeServiceImpl implements RechargeService {
 
 		// Disponibilité du service
 		if (this.checkStatus().equals(Message.MAURITEL_SERVER_DOWN)) {
-			logger.info(Message.MESSAGE_MAURITEL_SERVER_DOWN);
+			//logger.info(Message.MESSAGE_MAURITEL_SERVER_DOWN);
 			throw new Exception(Message.MESSAGE_MAURITEL_SERVER_DOWN);
 		}
 
-		// Test de validité du token
+		// TEST DE VALIDITE DU TOKEN
 		if (this.token == null) {
+			logger.info("AUTHENTICATION ");
 			this.token = this.authentication();
+			logger.info("AUTHENTICATED ");
 		}
 
-		if (!JWT.iSJwtTimeValid(JWT.getExpirationTime(this.token))) {
+		int tokenTime=JWT.getExpirationTime(this.token);
+		
+		logger.info("TOKEN TIME EXPIRATION : "  + tokenTime);
+		
+		if(JWT.iSJwtTimeValid(tokenTime)==false){
 			this.token = authentication();
+			logger.info("TIME EXPIRED ,GET NEW TOKEN  : " + this.token);
 		}
-
 		HttpHeaders headers = RechargeServiceHelper.getHeaders(this.token);
 
 		HttpEntity<String> entete = new HttpEntity<>(headers);
 
-		Map<String, String> params = RechargeServiceHelper.getParamettersRechargeClassique(rechargeClassiqueDto);
-
+		
 		String URL = host + "/bm/api/recharge/?sender="+rechargeClassiqueDto.getSender()+"&receiver="+rechargeClassiqueDto.getReceiver()+"&amount="+rechargeClassiqueDto.getAmount();
 		
 		try {
-			logger.info("URL GLOBAL --- " + URL);
+			logger.info("GLOBAL URL --- :  " + URL);
 			ResponseEntity<ResponseRechargeDto> response = restTemplate.exchange(URI.create(URL) , HttpMethod.GET, entete,
 					ResponseRechargeDto.class);
-			logger.info("Service rechargeClassique RESPONSE HTTP STATUS : " + response.getStatusCode());
+			
+			logger.info("RESPONSE HTTP STATUS   :   " + response.getStatusCode());
 
-			if (response.getStatusCode() == HttpStatus.OK) {
+			if (response.getStatusCode() == HttpStatus.OK){
 				return response.getBody();
 			}else{
-				throw new Exception("Exception Code erreur : " + response.getStatusCode());
+				throw new Exception("EXCEPTION HTTP STATUS CODE  : " + response.getStatusCode());
 			}
 		}catch (Exception e) {
-			throw new Exception("Exception : " + e.getMessage());
+			throw new Exception("EXCEPTION WHEN CALLING MAURITEL : " + e.getMessage());
 		}
 	}
 
+	
+	
 	@Override
 	public Set<String> getMontants(List<DetailService> listDetailService) throws Exception {
 		// TODO Auto-generated method stub

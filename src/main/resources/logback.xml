@@ -15,7 +15,7 @@
 
   <appender name="SAVE-TO-FILE"
             class="ch.qos.logback.core.rolling.RollingFileAppender">
-    <file>${LOG_PATH}/monetique_service.log</file>
+    <file>${LOG_PATH}/api_recharge_mauritel.log</file>
     <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
       <Pattern>
         %d{dd-MM-yyyy HH:mm:ss.SSS} [%thread] %-5level %logger{36}.%M - %msg%n

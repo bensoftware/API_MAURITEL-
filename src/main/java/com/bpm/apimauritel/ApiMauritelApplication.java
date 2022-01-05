@@ -1,6 +1,7 @@
 package com.bpm.apimauritel;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,6 +53,7 @@ public class ApiMauritelApplication implements ApplicationRunner {
 		rechargeMarketingDto.setSender("37804578");
 		rechargeMarketingDto.setCodeService("1");
 		 
+		System.err.println("TIME " +new Date().getTime() / 1000);
 	//	ResponseRechargeDto responseRechargeDto= rechargeService.rechargeParServiceMarketing(rechargeMarketingDto);
    //System.err.println("Response : "+responseRechargeDto);	
   //		

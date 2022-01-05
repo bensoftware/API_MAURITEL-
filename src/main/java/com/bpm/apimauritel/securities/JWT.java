@@ -11,14 +11,21 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class JWT {
 
-	final Logger logger = LoggerFactory.getLogger(JWT.class);
+	public static final Logger logger = LoggerFactory.getLogger(JWT.class);
 
 	public static boolean iSJwtTimeValid(int exp){
-		if (exp < new Date().getTime() / 1000) {
-			return true;
-		}
+		
+		/*
+		 * if (exp < new Date().getTime() / 1000){ logger.info(" TIME EXPIRED : TRUE ");
+		 * return true; }
+		 */
+		if (new Date().getTime() >= exp * 1000) {	 
+			  return true;
+			}
+		 logger.info(" TIME EXPIRED : TRUE ");
 		return false;
 	}
+	
 
 	public static int getExpirationTime(TokenDto tokenDto) throws Exception {
 

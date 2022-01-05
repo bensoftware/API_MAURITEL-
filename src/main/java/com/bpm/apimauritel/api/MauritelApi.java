@@ -251,11 +251,11 @@ public class MauritelApi {
 			if(responseRechargeDto.isSuccess()){
 				transactionPayement.setService(serviceT);
 				transactionPayement.setSuccess(true);
-				transactionPayementService.save(transactionPayement);
+				//transactionPayementService.save(transactionPayement);
 			}else{
 				transactionPayement.setService(serviceT);
 				transactionPayement.setErrorMessage(responseRechargeDto.getMessage());
-				transactionPayementService.save(transactionPayement);
+				//transactionPayementService.save(transactionPayement);
 			}
 		}catch (Exception e) {
 			logger.info(e.getMessage());
