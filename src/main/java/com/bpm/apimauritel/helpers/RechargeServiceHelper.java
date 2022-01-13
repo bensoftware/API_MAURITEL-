@@ -59,9 +59,9 @@ public class RechargeServiceHelper {
 			String typeRecharge) {
 		TransactionPayement transactionPayement = new TransactionPayement();
 		// transactionPayement.setAmountPay(Double.parseDouble(rechargeMarketingDto.getAmount()));
-		transactionPayement.setTypeRecharge("CLASSIQUE");
+		transactionPayement.setTypeRecharge(typeRecharge);
 		transactionPayement.setAmountPay(Double.parseDouble(rechargeClassiqueDto.getAmount()));
-		transactionPayement.setTransactionDate(new Date());
+		transactionPayement.setDateRequest(new Date());
 		transactionPayement.setTransactionId(rechargeClassiqueDto.getIdTransction());
 		transactionPayement.setSender(rechargeClassiqueDto.getSender());
 		transactionPayement.setReceiver(rechargeClassiqueDto.getReceiver());

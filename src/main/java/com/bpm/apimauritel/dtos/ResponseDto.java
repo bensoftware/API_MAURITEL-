@@ -17,5 +17,7 @@ public class ResponseDto {
 			super();
 			this.response = response;
 		}
+	 
+	 
 	
 }

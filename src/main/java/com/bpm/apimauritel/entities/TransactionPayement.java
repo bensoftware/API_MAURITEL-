@@ -41,6 +41,8 @@ public class TransactionPayement implements Serializable {
     private Date   	transactionDate;
     private boolean success;
     private String  typeRecharge;
+    private Date dateRequest;
+    private String transactionStatus;
     
     ///--OPTIONAL FOR NOW
 	/*

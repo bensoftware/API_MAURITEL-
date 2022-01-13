@@ -4,7 +4,7 @@ import com.bpm.apimauritel.entities.TransactionPayement;
 
 public interface TransactionPayementService {
 	
-	public void save(TransactionPayement transactionPayement) throws Exception;
+	public TransactionPayement save(TransactionPayement transactionPayement) throws Exception;
 	
 	public void upadte(TransactionPayement transactionPayement) throws Exception;
 

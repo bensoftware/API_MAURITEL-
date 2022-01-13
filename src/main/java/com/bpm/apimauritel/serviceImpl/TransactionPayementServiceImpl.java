@@ -18,9 +18,9 @@ public class TransactionPayementServiceImpl implements TransactionPayementServic
 	TransactionPayementRepository transactionPayementRepository;
 
 	@Override
-	public void save(TransactionPayement transactionPayement) throws Exception {
+	public TransactionPayement save(TransactionPayement transactionPayement) throws Exception {
 		try {
-			transactionPayementRepository.save(transactionPayement);
+		return 	transactionPayementRepository.save(transactionPayement);
 		} catch (Exception e) {
 			logger.error(e.getMessage());
 			throw new Exception("EXCEPTION" + e.getMessage());
