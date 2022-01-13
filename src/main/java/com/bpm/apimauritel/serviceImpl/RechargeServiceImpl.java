@@ -31,7 +31,6 @@ import com.bpm.apimauritel.securities.JWT;
 import com.bpm.apimauritel.services.RechargeService;
 
 
-
 @Service
 public class RechargeServiceImpl implements RechargeService {
 
@@ -52,7 +51,7 @@ public class RechargeServiceImpl implements RechargeService {
 	@Value("${password}")
 	public String password;
 
-	public TokenDto token;
+	public TokenDto token ;
 
 	@Override
 	public String checkStatus() throws Exception {
@@ -83,7 +82,6 @@ public class RechargeServiceImpl implements RechargeService {
 		}
 
 		UserDto userDto = new UserDto(username,password);
-
 		String url = host + "/" + "bm/authenticate";
 
 		HttpHeaders headers = new HttpHeaders();
@@ -128,7 +126,6 @@ public class RechargeServiceImpl implements RechargeService {
 		}
 
 		HttpHeaders headers = RechargeServiceHelper.getHeaders(this.token);
-
 		HttpEntity<String> entete = new HttpEntity<>(headers);
 
 		System.err.println("TOKEN TO BE SEND : " + "Bearer " + token.getToken());
@@ -139,10 +136,10 @@ public class RechargeServiceImpl implements RechargeService {
 			ResponseEntity<Object> response = restTemplate.exchange(URL, HttpMethod.GET, entete, Object.class);
 			if (response.getStatusCode() == HttpStatus.OK) {
 				if (response.getBody() != null) {
-					List<Object> listObjet = (List<Object>) response.getBody();
+					List<Object> listObjet = (List<Object>)response.getBody();
 
 					for (Object x : listObjet) {
-						Map<String, String> map = (Map<String, String>) x;
+						Map<String, String> map = (Map<String,String>) x;
 
 						System.err.println("" + map);
 
@@ -178,9 +175,7 @@ public class RechargeServiceImpl implements RechargeService {
 		}
 
 		HttpHeaders headers = RechargeServiceHelper.getHeaders(this.token);
-
 		HttpEntity<String> entete = new HttpEntity<>(headers);
-
 		Map<String, String> params = RechargeServiceHelper.getParametters(rechargeMarketingDto);
 
 		String URL = host + "/bm/api/recharge/";
@@ -199,6 +194,7 @@ public class RechargeServiceImpl implements RechargeService {
 		return rechargeDto;
 	}
 
+	
 	@Override
 	public ResponseRechargeDto rechargeClassique(RechargeClassiqueDto rechargeClassiqueDto) throws Exception {
 
@@ -215,23 +211,23 @@ public class RechargeServiceImpl implements RechargeService {
 			logger.info("AUTHENTICATED ");
 		}
 
-		int tokenTime=JWT.getExpirationTime(this.token);
+		long tokenTime=JWT.getExpirationTime(this.token);
 		
 		logger.info("TOKEN TIME EXPIRATION : "  + tokenTime);
 		
 		if(JWT.iSJwtTimeValid(tokenTime)==false){
-			this.token = authentication();
+			this.token =this.authentication();
 			logger.info("TIME EXPIRED ,GET NEW TOKEN  : " + this.token);
 		}
+		
 		HttpHeaders headers = RechargeServiceHelper.getHeaders(this.token);
-
 		HttpEntity<String> entete = new HttpEntity<>(headers);
 
-		
 		String URL = host + "/bm/api/recharge/?sender="+rechargeClassiqueDto.getSender()+"&receiver="+rechargeClassiqueDto.getReceiver()+"&amount="+rechargeClassiqueDto.getAmount();
 		
 		try {
 			logger.info("GLOBAL URL --- :  " + URL);
+			
 			ResponseEntity<ResponseRechargeDto> response = restTemplate.exchange(URI.create(URL) , HttpMethod.GET, entete,
 					ResponseRechargeDto.class);
 			
@@ -247,7 +243,6 @@ public class RechargeServiceImpl implements RechargeService {
 		}
 	}
 
-	
 	
 	@Override
 	public Set<String> getMontants(List<DetailService> listDetailService) throws Exception {

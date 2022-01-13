@@ -1,6 +1,8 @@
 package com.bpm.apimauritel.securities;
 
 import java.io.IOException;
+import java.math.BigDecimal;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Map;
 import org.apache.commons.codec.binary.Base64;
@@ -13,21 +15,31 @@ public class JWT {
 
 	public static final Logger logger = LoggerFactory.getLogger(JWT.class);
 
-	public static boolean iSJwtTimeValid(int exp){
+	public static boolean iSJwtTimeValid(long expire){
+				
+		BigDecimal bigDec= new BigDecimal(expire*1000);
+		Date dateExp=new Date(bigDec.longValue());
+		Calendar c1= Calendar.getInstance();
+		c1.setTime(dateExp);
 		
-		/*
-		 * if (exp < new Date().getTime() / 1000){ logger.info(" TIME EXPIRED : TRUE ");
-		 * return true; }
-		 */
-		if (new Date().getTime() >= exp * 1000) {	 
+		Date dateActuel = new Date();			
+		Calendar c2= Calendar.getInstance();
+		c2.setTime(dateActuel);
+		
+		if(c2.after(c1)) {
+			 logger.info(" TIME IS  EXPIRED : THE TOKEN IS NO LONGER VALID ");
+				return false;
+		}
+		else {
+			 logger.info(" TIME IS NOT YET EXPIRED : THE TOKEN IS VALID  ");
 			  return true;
-			}
-		 logger.info(" TIME EXPIRED : TRUE ");
-		return false;
+
+		}
+
 	}
 	
 
-	public static int getExpirationTime(TokenDto tokenDto) throws Exception {
+	public static long getExpirationTime(TokenDto tokenDto) throws Exception {
 
 		if (tokenDto == null) {
 			throw new Exception("The token is null,try to see if MAURITEL SERVICE IS UP");
