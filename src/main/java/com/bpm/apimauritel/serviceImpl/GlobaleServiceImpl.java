@@ -1,24 +1,22 @@
 package com.bpm.apimauritel.serviceImpl;
 
 import java.util.Date;
-
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-
 import com.bpm.apimauritel.services.GlobalService;
 
 @Service
 public class GlobaleServiceImpl  implements GlobalService{
 
 	@Value("${delai.exception}")
-	int delai; // minute
+    private	int delai; // minute
 	
 	@Value("${delai.retry.exception}")
-	int delaiRetry; // minute
+	private	int delaiRetry; // minute
 	
-	Date dateException=null;
+	private	Date dateException=null;
 	
-	Date dateNotification=null;
+	private	Date dateNotification=null;
 
 	@Override
 	public int getDelaiException() {
@@ -44,10 +42,10 @@ public class GlobaleServiceImpl  implements GlobalService{
 		return delaiRetry;
 	}
 
+	
 	@Override
 	public void setNotification(Date notification) {
 		this.dateNotification=notification;
-		
 	}
 
 	@Override
@@ -56,7 +54,5 @@ public class GlobaleServiceImpl  implements GlobalService{
 		return dateNotification;
 	}
 	
-	
-	
-	
+		
 }
