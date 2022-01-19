@@ -32,12 +32,12 @@ public class MauritelApiHelper {
 		return false;
 	}
 	
-       public static boolean isDetailException(Date dateEx, int minute) {
+    public static boolean isDetailException(Date dateEx, int minute) {
 
 		
 		Calendar ac= Calendar.getInstance();
 		ac.setTime(dateEx);
-		// incrementation par minute
+		// Incrementation par minute
 		ac.add(Calendar.MINUTE, minute); 	
 		
 		

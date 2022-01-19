@@ -24,20 +24,20 @@ public class TraitementServiceImpl implements TraitementService{
 	@Override
 	public void traitementException() {
 		
-		Date dateEx= globalService.getDateException();
+		Date dateEx=  globalService.getDateException();
 		int detail =  globalService.getDelaiException();
 		
 		if(dateEx!=null) {
 			boolean verif=MauritelApiHelper.isDetailException(dateEx, detail);
 			
-			if(verif) {
+			if(verif){
 				Date dateNotification=globalService.getNotification();
 				
 				if(dateNotification==null) {
 					// Envoyer une notif
-					logger.info("MAURITEL API - Exception reponse BD MAURITEL date debut de l exception : " + dateEx);
+					logger.info("MAURITEL API - Exception reponse BD MAURITEL date debut de l'exception : " + dateEx);
 					try {
-						smsService.sendSms("MAURITEL API - Exception reponse BD MAURITEL date debut de l exception : " + dateEx);
+						smsService.sendSms("MAURITEL API - Exception reponse BD MAURITEL date debut de l'exception : " + dateEx);
 					} catch (Exception e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
@@ -66,14 +66,12 @@ public class TraitementServiceImpl implements TraitementService{
 		}
 	}
 
-
 	@Override
 	public void responseException() {
-		
 		Date dateEx= globalService.getDateException();
 		if(dateEx==null) {
 			globalService.setDateException(new Date());
-			logger.info("Response Exception MOOV-Mauritel "+new Date());
+			logger.info("RESPONSE SUCCESS MOOV-Mauritel : " + new Date());
 		}
 	}
 
@@ -83,9 +81,8 @@ public class TraitementServiceImpl implements TraitementService{
 		if(dateEx!=null) {
 			globalService.setDateException(null);
 			globalService.setNotification(null);
-			logger.info("Response Success MOOV-Mauritel "+new Date());
+			logger.info("RESPONSE SUCCESS MOOV-Mauritel : " + new Date());
 		}
 	}
 	
-
 }

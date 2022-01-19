@@ -214,6 +214,7 @@ public class MauritelApi {
 	}
 
 	
+	
 	@Operation(summary = "BPM ***")
 	@PostMapping(value = "/classique", produces = { "application/json" })
 	public @ResponseBody ResponseDto rechargeClassique(@Valid @RequestBody RechargeClassiqueDto rechargeClassiqueDto)
@@ -223,6 +224,7 @@ public class MauritelApi {
 	   if(!securityService.checkIP(httpServletRequest.getRemoteHost())) {
 			throw new Exception("IP ADRESS NOT ALLOWED");
 		  }
+	   
 		ResponseRechargeDto responseRechargeDto = new ResponseRechargeDto();
 		logger.info("RECHARGE CLASSIQUE [IN] : " + rechargeClassiqueDto);
 		
@@ -236,7 +238,7 @@ public class MauritelApi {
 			//SERVICE RECHARGE-CLASSIQUE
 			serviceT = serviceService.findServiceByCodeService("100");
 		} catch (Exception e) {
-			// check exception
+			// Check exception
 			traitementService.responseException();
 			logger.error(" EXCEPTION  : " + e.getMessage());
 			throw new Exception(e.getMessage());
@@ -253,11 +255,11 @@ public class MauritelApi {
 		// DISPONIBILITE DU SERVICE OU STOCK  to ignore
 		
 		
-		// appel de l'api mauritel externe
+		// Appel de l'api mauritel externe
 		try {
 			responseRechargeDto = rechargeService.rechargeClassique(rechargeClassiqueDto);
 		} catch (Exception e) {
-			// check exception
+			// Check exception
 		    traitementService.responseException();
 			transactionPayement.setTransactionStatus("TF");
 			transactionPayement.setTransactionDate(new Date());
@@ -269,14 +271,14 @@ public class MauritelApi {
 		
 		try {
 			if(responseRechargeDto.isSuccess()){	
-				// check success
+				// Check success
 				traitementService.responseSuccess();
 				transactionPayement.setTransactionStatus("TS");
 				transactionPayement.setTransactionDate(new Date());
 				transactionPayement.setSuccess(true);
 				transactionPayementService.save(transactionPayement);
 			}else{
-				// check exception
+				// Check exception
 				traitementService.responseException();
 				transactionPayement.setTransactionStatus("TF");
 				transactionPayement.setTransactionDate(new Date());
@@ -284,7 +286,7 @@ public class MauritelApi {
 				transactionPayementService.save(transactionPayement);
 			}
 		}catch (Exception e) {
-			// check exception
+			// Check exception
 			traitementService.responseException();
 			logger.info(e.getMessage());
 		}
