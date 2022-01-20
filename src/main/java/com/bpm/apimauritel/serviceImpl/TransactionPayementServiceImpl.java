@@ -23,7 +23,7 @@ public class TransactionPayementServiceImpl implements TransactionPayementServic
 		return 	transactionPayementRepository.save(transactionPayement);
 		} catch (Exception e) {
 			logger.error(e.getMessage());
-			throw new Exception("EXCEPTION" + e.getMessage());
+			throw new Exception("EXCEPTION : " + e.getMessage());
 		}
 	}
 
@@ -34,7 +34,7 @@ public class TransactionPayementServiceImpl implements TransactionPayementServic
 			transactionPayementRepository.save(transactionPayement);
 		} catch (Exception e) {
 			logger.error(e.getMessage());
-			throw new Exception("EXCEPTION" + e.getMessage());
+			throw new Exception("EXCEPTION : " + e.getMessage());
 		}
 	}
 

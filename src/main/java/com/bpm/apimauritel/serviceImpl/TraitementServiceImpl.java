@@ -28,7 +28,7 @@ public class TraitementServiceImpl implements TraitementService{
 		int detail =  globalService.getDelaiException();
 		
 		if(dateEx!=null) {
-			boolean verif=MauritelApiHelper.isDetailException(dateEx, detail);
+			boolean verif=MauritelApiHelper.isDetailException(dateEx,detail);
 			
 			if(verif){
 				Date dateNotification=globalService.getNotification();
@@ -52,9 +52,9 @@ public class TraitementServiceImpl implements TraitementService{
                     
 					if(verifRetry) {
 						// Envoyer une notif
-						logger.info("MAURITEL API - Rappel, Exception reponse BD MAURITEL date debut de l exception "+dateEx);
+						logger.info("MAURITEL API - Rappel, Exception reponse BD MAURITEL date debut de l'exception : " + dateEx);
 						try {
-							smsService.sendSms("MAURITEL API - Rappel, Exception reponse BD MAURITEL date debut de l exception "+dateEx);
+							smsService.sendSms("MAURITEL API - Rappel, Exception reponse BD MAURITEL date debut de l'exception : " + dateEx);
 						} catch (Exception e) {
 							// TODO Auto-generated catch block
 							e.printStackTrace();
@@ -71,7 +71,7 @@ public class TraitementServiceImpl implements TraitementService{
 		Date dateEx= globalService.getDateException();
 		if(dateEx==null) {
 			globalService.setDateException(new Date());
-			logger.info("RESPONSE SUCCESS MOOV-Mauritel : " + new Date());
+			logger.info("RESPONSE MOOV-Mauritel : " + new Date());
 		}
 	}
 
