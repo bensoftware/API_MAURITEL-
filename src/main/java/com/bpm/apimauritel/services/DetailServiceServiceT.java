@@ -5,7 +5,7 @@ import java.util.List;
 import com.bpm.apimauritel.entities.DetailService;
 import com.bpm.apimauritel.entities.ServiceT;
 
-public interface DetailServiceService {	
+public interface DetailServiceServiceT {	
 	
 	public DetailService save(DetailService detailService) throws Exception;
 	

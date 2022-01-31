@@ -1,50 +1,68 @@
 package com.bpm.apimauritel;
 
-import java.math.BigDecimal;
-import java.util.Calendar;
-import java.util.Date;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.ApplicationArguments;
+import org.springframework.boot.ApplicationRunner;
+import org.springframework.stereotype.Component;
+import com.bpm.apimauritel.entities.Amount;
+import com.bpm.apimauritel.entities.Detail;
+import com.bpm.apimauritel.entities.ServiceMauritel;
+import com.bpm.apimauritel.repositories.ServiceMauritelRepository;
+import com.bpm.apimauritel.services.AmountService;
+import com.bpm.apimauritel.services.DetailService;
+import com.bpm.apimauritel.services.ServiceMauritelService;
 
-import com.bpm.apimauritel.dtos.TokenDto;
-import com.bpm.apimauritel.securities.JWT;
+@Component
+public class TestMain implements ApplicationRunner {
 
-public class TestMain {
+	@Autowired
+	AmountService amountService;
+
+	@Autowired
+	ServiceMauritelRepository serviceMauritelRepository;
+
+	@Autowired
+	DetailService detailService;
+
+	@Autowired
+	ServiceMauritelService serviceServiceMauritelService;
 
 	public static void main(String[] args) throws Exception {
 		// TODO Auto-generated method stub
-//		long expire= 1641416349;		
-//		BigDecimal bigDec= new BigDecimal(expire*1000);
-//		
-//		Date dateExp=new Date(bigDec.longValue());
-//		System.out.println(dateExp);
-//		
-//
-//		Date dateActuel = new Date();
-//		
-//		Calendar c1= Calendar.getInstance();
-//		c1.setTime(dateExp);
-//		
-//		Calendar c2= Calendar.getInstance();
-//		c2.setTime(dateActuel);
-//		
-//		if(c2.after(c1)) {
-//			System.out.println("Expiré");
-//		}
-//		else {
-//			System.out.println("Actif");
-//
-//		}
-		
-		
-//		String token = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsImV4cCI6MTY0MTQ2OTQzMCwicm9sZXMiOlsiQWRtaW4iXSwiYWN0aW9ucyI6W3siYXV0aG9yaXR5IjoiY29tcHRhIn0seyJhdXRob3JpdHkiOiJleHBpbnQifSx7ImF1dGhvcml0eSI6ImV4cG9ydHJlY2gifSx7ImF1dGhvcml0eSI6ImdzYXBpIn0seyJhdXRob3JpdHkiOiJpbnR2b3VjaCJ9LHsiYXV0aG9yaXR5IjoiaXJjIn0seyJhdXRob3JpdHkiOiJpcnMifSx7ImF1dGhvcml0eSI6Im1hamV4In0seyJhdXRob3JpdHkiOiJub3RyZWNoIn0seyJhdXRob3JpdHkiOiJwYXJnbG8ifSx7ImF1dGhvcml0eSI6InBhcnJlY2gifSx7ImF1dGhvcml0eSI6InJyYyJ9LHsiYXV0aG9yaXR5IjoicnVsZXMifSx7ImF1dGhvcml0eSI6InRhIn0seyJhdXRob3JpdHkiOiJ1c2VycyJ9XX0.BGzSDGbS6ZIp0Eiey29sSndVFHvaCQA3rfHuGuz_JLM";
-//
-//		TokenDto tokenDto=new TokenDto();
-//		tokenDto.setToken(token);
-////		
-////		
-//		long exp= JWT.getExpirationTime(tokenDto);
-//		
-//		System.out.println(JWT.iSJwtTimeValid(exp));
-		
+
+	}
+
+	@Override
+	public void run(ApplicationArguments args) throws Exception {
+		// TODO Auto-generated method stub
+		ServiceMauritel serviceMauritel = new ServiceMauritel();
+		serviceMauritel.setActif(true);
+		serviceMauritel.setCodeOperation("d1d5");
+		serviceMauritel.setCodeService("55");
+		serviceMauritel.setId(268L);
+		// serviceServiceMauritelService.save(serviceMauritel);
+
+		Amount amount = new Amount();
+		amount.setActif(true);
+		amount.setAmount(14523);
+		amount.setId(270L);
+		// amountService.save(amount);
+
+		Detail detail = new Detail();
+		detail.setAmount(amount);
+		detail.setServiceMauritel(serviceMauritel);
+		detail.setDescriptionAr("Ar");
+		detail.setDescriptionAr("En");
+		detail.setDescriptionAr("Fr");
+
+		detail.setValidityAr("24h");
+		detail.setValidityEn("15H");
+		detail.setValidityFr("4512");
+
+		// detailService.save(detail);
+
+		System.err.println("Je suis ici pour la....... : " + detailService.findAllDetailServices());
+
 	}
 
 }

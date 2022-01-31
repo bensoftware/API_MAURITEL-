@@ -12,7 +12,7 @@ import com.bpm.apimauritel.entities.DetailService;
 import com.bpm.apimauritel.entities.ServiceT;
 import com.bpm.apimauritel.helpers.CashHelper;
 import com.bpm.apimauritel.services.CashService;
-import com.bpm.apimauritel.services.DetailServiceService;
+import com.bpm.apimauritel.services.DetailServiceServiceT;
 import com.bpm.apimauritel.services.RechargeService;
 import com.bpm.apimauritel.services.ServiceService;
 
@@ -28,7 +28,7 @@ public class CashServiceImpl implements CashService {
 	RechargeService rechargeService;
 
 	@Autowired
-	DetailServiceService detailServiceService;
+	DetailServiceServiceT detailServiceServiceT;
 	
 	List<ServiceDto> listServiceFromMauritel;
 
@@ -82,17 +82,17 @@ public class CashServiceImpl implements CashService {
 				detailService.setDescription(serviceDto.getDescription());
 				detailService.setService(serviceT);
 				try {
-				DetailService detailServiceTest = detailServiceService.findDetailServiceByDescription(serviceDto.getDescription());
+				DetailService detailServiceTest = detailServiceServiceT.findDetailServiceByDescription(serviceDto.getDescription());
 					if(detailServiceTest == null){
 						 //On insert le DetailService pour ce service,serviceT.	
-						detailServiceService.save(detailService);
+						detailServiceServiceT.save(detailService);
 					}else{
 					  //On insert le DetailService pour ce service.
 					 //Mise à jour des informations modifiées. 
 						detailService.setAmount(serviceDto.getAmount());
 						detailService.setDescription(serviceDto.getDescription());
 						detailService.setService(serviceT);
-						detailServiceService.save(detailService);
+						detailServiceServiceT.save(detailService);
 					}
 				}catch (Exception e) {
 					throw new Exception(e.getMessage());
@@ -128,7 +128,7 @@ public class CashServiceImpl implements CashService {
 		}
 	}
 	
-	public void deActivateService() throws Exception {
+	private void deActivateService() throws Exception {
 		 	List<ServiceT>	listServicesFromDatabase=serviceService.getAllServices();
        // Verifier si un Service dans la base de donnée existe chez MAURITEL.
 		    listServiceFromMauritel =rechargeService.getMarketingServices();
@@ -142,6 +142,13 @@ public class CashServiceImpl implements CashService {
 	        		}
 			} 
 	}
+
+
+	
+	
+	
+	
+	
 	
 	
 }

@@ -5,14 +5,16 @@ import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-
+import org.springframework.context.annotation.ComponentScan;
 import com.bpm.apimauritel.services.CashService;
-import com.bpm.apimauritel.services.DetailServiceService;
+import com.bpm.apimauritel.services.DetailServiceServiceT;
 import com.bpm.apimauritel.services.ProcessingService;
 import com.bpm.apimauritel.services.RechargeService;
+import com.bpm.apimauritel.services.ServiceMauritelService;
 import com.bpm.apimauritel.services.ServiceService;
 
 @SpringBootApplication
+@ComponentScan(basePackages = {"com.bpm.apimauritel"})
 public class ApiMauritelApplication implements ApplicationRunner {
 
 	@Autowired
@@ -22,7 +24,7 @@ public class ApiMauritelApplication implements ApplicationRunner {
 	ServiceService serviceService;
 
 	@Autowired
-	DetailServiceService detailServiceService;
+	DetailServiceServiceT detailServiceServiceT;
 
 	@Autowired
 	CashService cashService;
@@ -31,17 +33,18 @@ public class ApiMauritelApplication implements ApplicationRunner {
 	ProcessingService processingService;
 	
 	
+	@Autowired
+	ServiceMauritelService serviceServiceMauritelService;
+	
 	public static void main(String[] args) {
 		SpringApplication.run(ApiMauritelApplication.class, args);
 	}
 
 	
-	
-	
-
 	@Override
 	public void run(ApplicationArguments args) throws Exception {
 
+		
 		 // --test rechargeParServiceMarketing
 //		RechargeMarketingDto rechargeMarketingDto=new RechargeMarketingDto();
 //		rechargeMarketingDto.setAmount("5000");

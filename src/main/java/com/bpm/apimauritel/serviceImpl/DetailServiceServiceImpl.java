@@ -10,11 +10,11 @@ import org.springframework.stereotype.Service;
 import com.bpm.apimauritel.entities.DetailService;
 import com.bpm.apimauritel.entities.ServiceT;
 import com.bpm.apimauritel.repositories.DetailServiceRepository;
-import com.bpm.apimauritel.services.DetailServiceService;
+import com.bpm.apimauritel.services.DetailServiceServiceT;
 import com.bpm.apimauritel.services.ServiceService;
 
 @Service
-public class DetailServiceServiceImpl implements DetailServiceService {
+public class DetailServiceServiceImpl implements DetailServiceServiceT {
 
 	public final Logger logger = LoggerFactory.getLogger(DetailServiceServiceImpl.class);
 	

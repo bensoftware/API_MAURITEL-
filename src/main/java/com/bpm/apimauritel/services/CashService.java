@@ -9,4 +9,6 @@ public interface CashService {
 	public void saveDetailService(ServiceT serviceT) throws Exception ;
 	
 	public void Upadate() throws Exception ;
+	
+	//public void SaveData() throws Exception ;
 }

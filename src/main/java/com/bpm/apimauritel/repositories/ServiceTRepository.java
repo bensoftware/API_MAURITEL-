@@ -5,7 +5,7 @@ import org.springframework.stereotype.Repository;
 import com.bpm.apimauritel.entities.ServiceT;
 
 @Repository
-public interface ServiceRepository extends JpaRepository<ServiceT,Long>{	
+public interface ServiceTRepository extends JpaRepository<ServiceT,Long>{	
 	
 	public ServiceT findServiceByCodeService(String codeOperation) ;
 	

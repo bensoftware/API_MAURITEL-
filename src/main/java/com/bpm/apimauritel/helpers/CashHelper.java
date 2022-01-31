@@ -5,12 +5,12 @@ import java.util.List;
 import com.bpm.apimauritel.dtos.ServiceDto;
 import com.bpm.apimauritel.entities.DetailService;
 import com.bpm.apimauritel.entities.ServiceT;
-import com.bpm.apimauritel.services.DetailServiceService;
+import com.bpm.apimauritel.services.DetailServiceServiceT;
 import com.bpm.apimauritel.services.ServiceService;
 
 public class CashHelper {
 
-	public static void  SaveDetailService(ServiceT serviceT,List<ServiceDto> listService,DetailServiceService detailServiceService) throws Exception {
+	public static void  SaveDetailService(ServiceT serviceT,List<ServiceDto> listService,DetailServiceServiceT detailServiceServiceT) throws Exception {
 		
 		 DetailService detailService=null;
 			for(ServiceDto serviceDto : listService) {
@@ -21,9 +21,9 @@ public class CashHelper {
 					 detailService.setDescription(serviceDto.getDescription()); 
 					 detailService.setService(serviceT);
 					 try {
-						 detailService=detailServiceService.findDetailServiceByDescription(serviceDto.getDescription());
+						 detailService=detailServiceServiceT.findDetailServiceByDescription(serviceDto.getDescription());
 						 if(detailService==null){
-							 detailServiceService.save(detailService);
+							 detailServiceServiceT.save(detailService);
 						 }else{
 							 // logger.info('');
 						 }

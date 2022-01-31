@@ -4,20 +4,20 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.bpm.apimauritel.entities.ServiceT;
-import com.bpm.apimauritel.repositories.ServiceRepository;
+import com.bpm.apimauritel.repositories.ServiceTRepository;
 import com.bpm.apimauritel.services.ServiceService;
 
 @Service
 public class ServiceServiceImpl implements ServiceService {
 
 	@Autowired
-	ServiceRepository serviceRepository;
+	ServiceTRepository serviceTRepository;
 
 	@Override
 	public ServiceT save(ServiceT service) throws Exception {
 		ServiceT serviceT = null;
 		try {
-			serviceT = serviceRepository.saveAndFlush(service);
+			serviceT = serviceTRepository.saveAndFlush(service);
 		} catch (Exception e) {
 			throw new Exception(e.getMessage());
 		}
@@ -27,7 +27,7 @@ public class ServiceServiceImpl implements ServiceService {
 	@Override
 	public void update(ServiceT service) throws Exception {
 		try {
-			serviceRepository.save(service);
+			serviceTRepository.save(service);
 		} catch (Exception e) {
 			throw new Exception(e.getMessage());
 		}
@@ -43,7 +43,7 @@ public class ServiceServiceImpl implements ServiceService {
 	public List<ServiceT> getAllServices() throws Exception {
 		List<ServiceT> listServiceT = null;
 		try {
-			listServiceT = serviceRepository.findAll();
+			listServiceT = serviceTRepository.findAll();
 		} catch (Exception e) {
 			throw new Exception(e.getMessage());
 		}
@@ -55,7 +55,7 @@ public class ServiceServiceImpl implements ServiceService {
 	public ServiceT findServiceByCodeService(String codeOperation) throws Exception {
 		ServiceT serviceT = null;
 		try {
-			serviceT = serviceRepository.findServiceByCodeService(codeOperation);
+			serviceT = serviceTRepository.findServiceByCodeService(codeOperation);
 		} catch (Exception e) {
 			throw new Exception(e.getMessage());
 		}
@@ -69,7 +69,7 @@ public class ServiceServiceImpl implements ServiceService {
 		ServiceT serviceT = null;
 
 		try {
-			serviceT = serviceRepository.findById(idService).get();
+			serviceT = serviceTRepository.findById(idService).get();
 		} catch (Exception e) {
 			// TODO: handle exception
 		}

@@ -5,32 +5,36 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.ManyToOne;
 import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.CascadeType;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.Data;
 
-@Getter
-@Setter
 @Entity
-public class DetailService implements Serializable {
+@Data
+public class Detail implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	@Id
 	private Long id;
-	private String amount;
-	private String description;
-
-	@ToString.Exclude
-	@ManyToOne
+	
+	private String validityFr;
+	private String validityEn;
+	private String validityAr;
+	
+	private String descriptionFr;
+	private String descriptionEn;
+	private String descriptionAr;
 	
 	@Cascade(CascadeType.SAVE_UPDATE)
 	@JsonIgnore
-	private ServiceT service;
-
+	private ServiceMauritel serviceMauritel;
+	
+	
+	@Cascade(CascadeType.SAVE_UPDATE)
+	@JsonIgnore
+	private Amount amount;
+	
 }
