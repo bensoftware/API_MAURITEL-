@@ -6,6 +6,8 @@ import org.springframework.boot.ApplicationRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.ComponentScan;
+
+import com.bpm.apimauritel.services.AmountService;
 import com.bpm.apimauritel.services.CashService;
 import com.bpm.apimauritel.services.DetailServiceServiceT;
 import com.bpm.apimauritel.services.ProcessingService;
@@ -35,6 +37,9 @@ public class ApiMauritelApplication implements ApplicationRunner {
 	
 	@Autowired
 	ServiceMauritelService serviceServiceMauritelService;
+	
+	@Autowired
+	AmountService amountService;
 	
 	public static void main(String[] args) {
 		SpringApplication.run(ApiMauritelApplication.class, args);

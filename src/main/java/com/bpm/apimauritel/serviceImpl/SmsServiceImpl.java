@@ -22,7 +22,6 @@ public class SmsServiceImpl implements SmsService {
 	@Override
 	public int sendSms(String msg) throws Exception {
 
-		
 		if(telephones!=null && telephones.size()>0)
 			for(String phone : telephones) {
 				try {
@@ -36,13 +35,7 @@ public class SmsServiceImpl implements SmsService {
 				} catch (Exception e) {
 				}
 			}
-		
-		
-	
-		
 		return 1;
-		
-		
 	}
 	
 

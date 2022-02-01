@@ -7,4 +7,5 @@ import com.bpm.apimauritel.entities.Amount;
 @Repository
 public interface AmountRepository extends JpaRepository<Amount, Long> {
 
+	public  Amount findByAmount(double amount);
 }

@@ -10,4 +10,7 @@ public interface AmountService {
 	public void update(Amount amount) throws Exception;
 	
 	public List<Amount> findAllAmounts() throws Exception;
+	
+	public Amount  findByAmount(Double amount) throws Exception;
+	
 }

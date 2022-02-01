@@ -53,4 +53,17 @@ public class AmountServiceImpl implements AmountService {
 		return listOfAmounts;
 	}
 
+	@Override
+	public Amount findByAmount(Double amount) throws Exception {
+		// TODO Auto-generated method stub
+		Amount amount2=new Amount();
+		try {
+			amount2 =amountRepository.findByAmount(amount);
+		} catch (Exception e) {
+			// TODO: handle exception
+			logger.info("EXCEPTION FIND BY AMOUNT : " +e.getMessage());
+		}
+		return amount2;
+	}
+
 }
