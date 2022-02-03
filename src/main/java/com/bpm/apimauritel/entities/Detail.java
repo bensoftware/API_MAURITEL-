@@ -2,16 +2,22 @@ package com.bpm.apimauritel.entities;
 
 import java.io.Serializable;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import org.hibernate.annotations.Cascade;
-import org.hibernate.annotations.CascadeType;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.Data;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Transient;
+
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 
 @Entity
-@Data
+@Getter
+@Setter
+//@ToString
 public class Detail implements Serializable {
 
 	private static final long serialVersionUID = 1L;
@@ -19,22 +25,23 @@ public class Detail implements Serializable {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	@Id
 	private Long id;
+   
+	@ManyToOne(fetch = FetchType.EAGER)
+	@JoinColumn(name = "service_Mauritel")
+	private ServiceMauritel serviceMauritel;
+
 	
+	@ManyToOne(fetch = FetchType.EAGER)
+	@JoinColumn(name = "amount")
+//	@Transient
+	private Amount amount;
+
 	private String validityFr;
 	private String validityEn;
 	private String validityAr;
-	
 	private String descriptionFr;
 	private String descriptionEn;
 	private String descriptionAr;
-	
-	@Cascade(CascadeType.SAVE_UPDATE)
-	@JsonIgnore
-	private ServiceMauritel serviceMauritel;
-	
-	
-	@Cascade(CascadeType.SAVE_UPDATE)
-	@JsonIgnore
-	private Amount amount;
-	
+	private String description;
+
 }

@@ -10,7 +10,4 @@ public interface CashService {
 	
 	public void Upadate() throws Exception ;
 	
-	
-	
-	public void savePureData() throws Exception ;
 }

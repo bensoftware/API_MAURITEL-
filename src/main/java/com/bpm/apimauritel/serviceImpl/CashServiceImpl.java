@@ -39,7 +39,8 @@ public class CashServiceImpl implements CashService {
 
 	@Autowired
 	ServiceMauritelService serviceMauritelService;
-
+	
+	@Autowired
 	AmountService amountService;
 
 	@Override
@@ -158,113 +159,6 @@ public class CashServiceImpl implements CashService {
 	}
 
 	
-	
-	@Override
-	public void savePureData() throws Exception {
-		// TODO Auto-generated method stub
-		List<DetailService> listDetailServices = detailServiceServiceT.findAllDetailService();
 
-		for (DetailService detailService : listDetailServices) {
-			Double amoun = Double.valueOf(detailService.getAmount());
-			Amount amount = new Amount();
-			ServiceMauritel serviceMauritel = new ServiceMauritel();
-			Detail detail = new Detail();
-			try {
-				// Test if the amount exist
-				amount = amountService.findByAmount(amoun);
-				// continue;
-				// System.err.println("Yep");
-			} catch (Exception e) {
-				// TODO: handle exception
-				// Si c'est null c'est que xq n'existe pas ainsi on l'ajoute.
-				amount.setAmount(Double.valueOf(detailService.getAmount()));
-				amount.setActif(true);
-				// amount= amountService.save(amount);
-				serviceMauritel.setActif(true);
-				serviceMauritel.setCodeOperation(detailService.getService().getCodeOperation());
-				serviceMauritel.setCodeService(detailService.getService().getCodeService());
-				// serviceMauritel=serviceMauritelService.save(serviceMauritel);
-
-				detail.setAmount(amount);
-				detail.setServiceMauritel(serviceMauritel);
-				// detail.setValidityAr(null);
-
-				String codeOperation = detailService.getService().getCodeOperation();
-				String validity = "";
-				
-				if (codeOperation.equals("GRATI-MEDIA")) {
-					validity = detailService.getDescription().split("/")[2];
-					String val = validity.split(":")[1];
-					String description = detailService.getDescription().split("/")[1];
-					System.err.println("GRATI-MEDIA : - " + val);
-				}
-
-				if (codeOperation.equals("GRATI-PLUS")) {
-					String validity1 = detailService.getDescription().split("//|/.")[4];
-					String val = validity1.split(":")[1];
-					String description = detailService.getDescription().split("/")[1] + " "
-							+ detailService.getDescription().split("/")[2] + " "
-							+ detailService.getDescription().split("/")[3];
-					// String validity5[] = detailService.getDescription().split("/");
-					System.err.println("GRATI-PLUS : - " + val);
-				}
-
-				if (codeOperation.equals("GRATI-DAWLY")) {
-					String validity3 = "";
-					validity3 = detailService.getDescription().split("/")[2];
-					String description = detailService.getDescription().split("/")[1];
-					String val = validity3.split(":")[1];
-					System.err.println("GRATI-DAWLY: - " + val);
-				}
-
-				if (codeOperation.equals("GRATI-NET")) {
-					String validity1 = detailService.getDescription().split("/")[3];
-					String description = detailService.getDescription().split("/")[1] + " "
-							+ detailService.getDescription().split("/")[2];
-					// String validity5[] = detailService.getDescription().split("/");
-					String val = validity1.split(":")[1];
-					System.err.println("GRATI-NET : - : " + val);
-				}
-
-				if (codeOperation.equals("GRATI-SMS")) {
-					String validity1 = detailService.getDescription().split("/")[2];
-					String description = detailService.getDescription().split("/")[1] + " "
-							+ detailService.getDescription().split("/")[2];
-					// String validity5[] = detailService.getDescription().split("/");
-					String val = validity1.split(":")[1];
-					System.err.println("GRATI-SMS : - : " + val);
-				}
-
-				if (codeOperation.equals("GRATI-FLEX")) {
-					String validity1 = detailService.getDescription().split("/")[3];
-					String description = detailService.getDescription().split("/")[1] + " "
-							+ detailService.getDescription().split("/")[2];
-					String val = "";
-					if (!validity1.contains(":")) {
-						val = validity1.substring(8, 12);
-					} else {
-						val = validity1.split(":")[1];
-					}
-					System.err.println("GRATI-FLEX : - : " + val);
-				}
-
-				if (codeOperation.equals("GRATI-ROAMING")) {
-					String validity1 = detailService.getDescription().split("/")[4];
-					String description = detailService.getDescription().split("/")[1] + " "
-							+ detailService.getDescription().split("/")[2];
-					String val = validity1.split(":")[1];
-					System.err.println("GRATI-ROAMING : - : " + val);
-				}
-
-				if (codeOperation.equals("GRATI-NET-ROAMING")){
-					String validity1 = detailService.getDescription().split("/")[2];
-					String description = detailService.getDescription().split("/")[1];
-					String val = validity1.split(":")[1];
-					System.err.println("GRATI-NET-ROAMING : - : " + val);
-				}
-
-			}
-		}
-	}
 
 }

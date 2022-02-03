@@ -13,4 +13,6 @@ public interface AmountService {
 	
 	public Amount  findByAmount(Double amount) throws Exception;
 	
+	public List<Double> findAllActifAmounts() throws Exception;
+	
 }

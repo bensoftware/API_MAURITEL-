@@ -54,4 +54,44 @@ public class CashHelper {
 	
 	
 	
+	public static String  getValidity(String description) {
+		
+		
+		String[] tab = description.split("/+");
+
+		for (String p : tab) {
+			System.out.println(p);
+		}
+
+		String validite = tab[tab.length - 1];
+
+		validite = validite.replaceAll("Validité:*", "");
+
+		System.out.println("Validity : "+ validite);
+
+		//System.out.println(validite);
+		return validite;
+
+	}
+	
+	public static String  getDescription(String description) {
+		
+		String descriptions = "";
+		String[] tab = description.split("/+");
+		int size = tab.length - 1;
+		for (int i = 0; i < tab.length; i++) {
+			String p = tab[i];
+			if (i != 0 && i != size) {
+				if (descriptions.equals(""))
+					descriptions += p;
+				else
+					descriptions += " " + p;
+			}
+		}	
+
+		System.out.println(descriptions);
+		return descriptions;
+	}
+	
+	
 }

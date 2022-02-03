@@ -56,4 +56,16 @@ public class ServiceMauritelImpl implements ServiceMauritelService {
 		return listOfServieMaurtels;
 	}
 
+	@Override
+	public ServiceMauritel findById(long id) throws Exception {
+		// TODO Auto-generated method stub
+		return serviceMauritelRepository.findById(id);
+	}
+
+	@Override
+	public ServiceMauritel findByCodeService(String codeService) throws Exception {
+		// TODO Auto-generated method stub
+		 return serviceMauritelRepository.findByCodeService(codeService);
+	}
+
 }

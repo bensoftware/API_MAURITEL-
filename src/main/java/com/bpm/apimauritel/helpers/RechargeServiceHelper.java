@@ -3,10 +3,8 @@ package com.bpm.apimauritel.helpers;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
-
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
-
 import com.bpm.apimauritel.dtos.RechargeClassiqueDto;
 import com.bpm.apimauritel.dtos.RechargeMarketingDto;
 import com.bpm.apimauritel.dtos.TokenDto;
@@ -62,7 +60,7 @@ public class RechargeServiceHelper {
 		transactionPayement.setTypeRecharge(typeRecharge);
 		transactionPayement.setAmountPay(Double.parseDouble(rechargeClassiqueDto.getAmount()));
 		transactionPayement.setDateRequest(new Date());
-		transactionPayement.setTransactionId(rechargeClassiqueDto.getIdTransction());
+		transactionPayement.setTransactionId(rechargeClassiqueDto.getBundleId());
 		transactionPayement.setSender(rechargeClassiqueDto.getSender());
 		transactionPayement.setReceiver(rechargeClassiqueDto.getReceiver());
 		return transactionPayement;

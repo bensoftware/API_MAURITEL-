@@ -10,5 +10,9 @@ public interface ServiceMauritelService {
 	public void update(ServiceMauritel serviceMauritel) throws Exception;
 
 	public List<ServiceMauritel> findAllServices() throws Exception;
+	
+	public ServiceMauritel findById(long id) throws Exception;
+	
+	public ServiceMauritel findByCodeService(String codeService) throws Exception;
 
 }

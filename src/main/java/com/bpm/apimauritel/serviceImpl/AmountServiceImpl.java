@@ -66,4 +66,15 @@ public class AmountServiceImpl implements AmountService {
 		return amount2;
 	}
 
+	@Override
+	public List<Double> findAllActifAmounts() throws Exception {
+		// TODO Auto-generated method stub
+		List<Double> listAmounts=new ArrayList<>();
+		List<Amount> listAmount=amountRepository.findAllActifAmounts();
+		for (Amount amount : listAmount) {
+			listAmounts.add(amount.getAmount());
+		}
+		return listAmounts;
+	}
+
 }

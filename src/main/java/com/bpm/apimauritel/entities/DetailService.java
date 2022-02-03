@@ -15,6 +15,7 @@ import lombok.ToString;
 
 @Getter
 @Setter
+@ToString
 @Entity
 public class DetailService implements Serializable {
 
@@ -25,7 +26,7 @@ public class DetailService implements Serializable {
 	private Long id;
 	private String amount;
 	private String description;
-
+    private boolean activated;
 	@ToString.Exclude
 	@ManyToOne
 	
