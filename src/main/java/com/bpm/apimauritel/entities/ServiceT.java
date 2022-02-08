@@ -31,9 +31,6 @@ public class ServiceT implements Serializable {
 	// @JsonIgnore
 	List<DetailService> detailServices;
 
-	@OneToMany(mappedBy = "service", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
-	@JsonIgnore
-	Set<TransactionPayement> transactionPayement;
 	
 
 	private String codeService;

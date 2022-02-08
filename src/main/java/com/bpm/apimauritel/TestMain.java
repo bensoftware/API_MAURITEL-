@@ -132,6 +132,7 @@ public class TestMain implements CommandLineRunner {
   //System.err.println("Liste des montants actifs :"+amountService.findAllActifAmounts());
  //System.err.println("Liste des détails : " +listdetaDetails);
 //cashDataService.savePureData();
+		cashService.saveService();
 	}
 
 }

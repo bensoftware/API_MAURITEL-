@@ -2,6 +2,7 @@ package com.bpm.apimauritel.entities;
 
 import java.io.Serializable;
 import java.util.Set;
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -9,8 +10,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Transient;
-import org.hibernate.annotations.Cascade;
-import org.hibernate.annotations.CascadeType;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.Setter;
@@ -27,17 +27,18 @@ public class ServiceMauritel implements Serializable {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	@Id
 	private Long id;
-	private String codeService;	  //Libelle
+	private String codeService; // Libelle
 	private String codeOperation;// Bundle
 	private boolean actif;
 
-	// @ToString.Exclude
-
-	@OneToMany(mappedBy = "serviceMauritel", fetch = FetchType.EAGER, orphanRemoval = true)
-	@Cascade({ CascadeType.SAVE_UPDATE })
+	@OneToMany(mappedBy = "serviceMauritel", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
 	@Transient
 	@JsonProperty
 	Set<Detail> listDetail;
+
+	@OneToMany(mappedBy = "service", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
+	@JsonIgnore
+	Set<TransactionPayement> transactionPayement;
 
 	// @OneToMany(mappedBy = "serviceMauritel", fetch = FetchType.EAGER, cascade =
 	// CascadeType.ALL, orphanRemoval = true)

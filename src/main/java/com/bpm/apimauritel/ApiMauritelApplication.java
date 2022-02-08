@@ -7,6 +7,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.ComponentScan;
 import com.bpm.apimauritel.services.AmountService;
+import com.bpm.apimauritel.services.CashDataService;
 import com.bpm.apimauritel.services.CashService;
 import com.bpm.apimauritel.services.DetailServiceServiceT;
 import com.bpm.apimauritel.services.ProcessingService;
@@ -30,6 +31,9 @@ public class ApiMauritelApplication implements ApplicationRunner {
 	@Autowired
 	CashService cashService;
 
+	@Autowired
+	CashDataService cashDataService;
+	
 	@Autowired
 	ProcessingService processingService;
 	
@@ -126,7 +130,10 @@ public class ApiMauritelApplication implements ApplicationRunner {
 //		  //	System.err.println("Liste of services Amount  : " + rechargeService.getMontants(detailServiceService.findAllDetailService()));
 //		System.err.println("Liste Filtered" +processingService.getServicesByAmount("500"));
 //		// +processingService.getServicesByAmount("500"));
+		
+		//cashDataService
+		//cashService.saveService();
+		//cashDataService.savePureData();
 	}
 
-	
 }

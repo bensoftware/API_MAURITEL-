@@ -31,7 +31,8 @@ public class TransactionPayement implements Serializable {
 	@NotNull
 	@Cascade(CascadeType.SAVE_UPDATE)
 	@JsonIgnore
-	private ServiceT service;
+	ServiceMauritel service;
+	//private ServiceT service;
 	private String 	sender;
     private String 	receiver;
     private double 	amountPay;
@@ -44,9 +45,6 @@ public class TransactionPayement implements Serializable {
     private Date dateRequest;
     private String transactionStatus;
     
-    ///--OPTIONAL FOR NOW
-	/*
-	 * private String comptabiliser; private double solde;
-	 */
+  
     
 }
