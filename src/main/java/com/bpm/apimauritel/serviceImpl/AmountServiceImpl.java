@@ -59,7 +59,7 @@ public class AmountServiceImpl implements AmountService {
 		Amount amount2=new Amount();
 		try {
 			amount2 =amountRepository.findByAmount(amount);
-		} catch (Exception e) {
+		}catch (Exception e) {
 			// TODO: handle exception
 			logger.info("EXCEPTION FIND BY AMOUNT : " + e.getMessage());
 		}

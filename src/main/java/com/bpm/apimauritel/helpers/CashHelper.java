@@ -78,7 +78,6 @@ public class CashHelper {
 	}
 
 	public static String getDescription(String description) {
-
 		String descriptions = "";
 		String[] tab = description.split("/+");
 		int size = tab.length - 1;
@@ -91,7 +90,6 @@ public class CashHelper {
 					descriptions += " " + p;
 			}
 		}
-
 		System.out.println(descriptions);
 		return descriptions;
 	}

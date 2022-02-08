@@ -5,10 +5,8 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +19,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
-
 import com.bpm.apimauritel.dtos.ListServices;
 import com.bpm.apimauritel.dtos.RechargeClassiqueDto;
 import com.bpm.apimauritel.dtos.RechargeMarketingDto;
@@ -34,6 +31,7 @@ import com.bpm.apimauritel.entities.ServiceT;
 import com.bpm.apimauritel.entities.TransactionPayement;
 import com.bpm.apimauritel.helpers.RechargeServiceHelper;
 import com.bpm.apimauritel.helpers.ResponseHelper;
+import com.bpm.apimauritel.helpers.ServiceHelper;
 import com.bpm.apimauritel.messages.Message;
 import com.bpm.apimauritel.services.AmountService;
 import com.bpm.apimauritel.services.DetailServiceServiceT;
@@ -43,7 +41,6 @@ import com.bpm.apimauritel.services.SecurityService;
 import com.bpm.apimauritel.services.ServiceService;
 import com.bpm.apimauritel.services.TraitementService;
 import com.bpm.apimauritel.services.TransactionPayementService;
-
 import io.swagger.v3.oas.annotations.Operation;
 
 @RestController
@@ -265,33 +262,25 @@ public class MauritelApi {
 
 		// TEST API KEY
 		// TEST IP AUTHPORIZED
-
 		ResponseDto responseDto = new ResponseDto();
 
-		logger.info("GET DETAIL SERVICE BY AMOUNT [IN]   : AMOUNT  : " + amount);
+		logger.info("GET DETAIL SERVICE BY AMOUNT [IN]   : AMOUNT    : " + amount);
 		logger.info("GET DETAIL SERVICE BY AMOUNT [IN]   : LANGUAGE  : " + language);
 
+		Set<Detail> listdetailDetails2 = new HashSet<>();
 		Set<Detail> listdetailDetails = new HashSet<>();
 		try {
-			
-			if(language==0) {
-				listdetailDetails = amountService.findByAmount(amount.doubleValue()).getDetail();
-			}else if(language==1) {
-				
-			}else if(language==2) {
-				
-			}
+			listdetailDetails = amountService.findByAmount(amount.doubleValue()).getDetail();
+			//listdetailDetails=ServiceHelper.bindDetail(listdetailDetails,language);
 			
 		}catch (Exception e) {
-			// TODO: handle exception
 			logger.info(e.getMessage());
 			responseDto.setResponse(listdetailDetails);
 			responseDto.setCodeError(1);
 			responseDto.setMessage("THERE ARE NO SERVICES RELATED TO : " + amount);
 			return responseDto;
 		}
-
-		List<ResponseService> listr = ResponseHelper.getDetailResponse(listdetailDetails);
+		List<ResponseService> listr = ResponseHelper.getDetailResponse(listdetailDetails,language);
 		ListServices listServices = new ListServices(listr);
 		responseDto.setMessage("SUCCES");
 		responseDto.setCodeError(0);

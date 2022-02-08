@@ -1,5 +1,6 @@
 package com.bpm.apimauritel;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -125,12 +126,11 @@ public class TestMain implements CommandLineRunner {
 //	System.err.println(" : " + detailService.getDescription());
 //}
 		
-//System.err.println("SERVICES : " + rechargeService.getMarketingServices());
+    //System.err.println("SERVICES : " + amountService.findByAmount(100D).getDetail());
 
 
-
-//System.err.println("Liste des montants actifs :"+amountService.findAllActifAmounts());
-//System.err.println("Liste des détails : " +listdetaDetails);
+  //System.err.println("Liste des montants actifs :"+amountService.findAllActifAmounts());
+ //System.err.println("Liste des détails : " +listdetaDetails);
 //cashDataService.savePureData();
 	}
 
