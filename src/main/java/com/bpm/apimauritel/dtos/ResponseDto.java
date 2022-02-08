@@ -6,8 +6,8 @@ import lombok.Data;
 public class ResponseDto {
 	
 	 private Object response;
-	 
 	 private String message;
+	 private int codeError;
 	 
 	 public ResponseDto() {
 			super();

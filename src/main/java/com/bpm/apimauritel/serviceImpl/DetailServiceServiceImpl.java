@@ -13,6 +13,8 @@ import com.bpm.apimauritel.repositories.DetailServiceRepository;
 import com.bpm.apimauritel.services.DetailServiceServiceT;
 import com.bpm.apimauritel.services.ServiceService;
 
+
+
 @Service
 public class DetailServiceServiceImpl implements DetailServiceServiceT {
 

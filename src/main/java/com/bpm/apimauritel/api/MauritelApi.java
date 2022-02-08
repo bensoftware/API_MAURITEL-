@@ -5,8 +5,10 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,15 +22,14 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.bpm.apimauritel.dtos.ListServiceBankily;
+import com.bpm.apimauritel.dtos.ListServices;
 import com.bpm.apimauritel.dtos.RechargeClassiqueDto;
 import com.bpm.apimauritel.dtos.RechargeMarketingDto;
-import com.bpm.apimauritel.dtos.ResponseDetail;
+import com.bpm.apimauritel.dtos.ResponseService;
+import com.bpm.apimauritel.dtos.ServiceDto;
 import com.bpm.apimauritel.dtos.ResponseDto;
 import com.bpm.apimauritel.dtos.ResponseRechargeDto;
-import com.bpm.apimauritel.entities.Amount;
 import com.bpm.apimauritel.entities.Detail;
-import com.bpm.apimauritel.entities.DetailService;
 import com.bpm.apimauritel.entities.ServiceT;
 import com.bpm.apimauritel.entities.TransactionPayement;
 import com.bpm.apimauritel.helpers.RechargeServiceHelper;
@@ -42,6 +43,7 @@ import com.bpm.apimauritel.services.SecurityService;
 import com.bpm.apimauritel.services.ServiceService;
 import com.bpm.apimauritel.services.TraitementService;
 import com.bpm.apimauritel.services.TransactionPayementService;
+
 import io.swagger.v3.oas.annotations.Operation;
 
 @RestController
@@ -71,10 +73,10 @@ public class MauritelApi {
 
 	@Autowired
 	ProcessingService processingService;
-	
+
 	@Autowired
 	TransactionPayementService transactionPayementService;
-	
+
 	@Autowired
 	AmountService amountService;
 
@@ -103,35 +105,6 @@ public class MauritelApi {
 		}
 		return new ResponseDto(listServiceT);
 	}
-
-	@Operation(summary = "BPM *** Get Details Service By using the service ID")
-	@GetMapping(value = "/detailServices", produces = { "application/json" })
-	public ResponseDto getDetailServicesByIdService(@RequestParam(name = "idService", required = true) Long idService)
-			throws Exception {
-		logger.info("GET DETAIL SERVICE  [IN]  : " + idService.longValue());
-
-		// TEST API key
-
-		// TEST IP AUTHPORIZED
-		if (idService == 0.0) {
-			logger.error("Service's ID is NULL");
-			throw new Exception("ID is NULL");
-		}
-		ServiceT serviceT = new ServiceT();
-		serviceT.setId(idService);
-		List<DetailService> listDetailServices = new ArrayList<>();
-		try {
-			listDetailServices = detailServiceServiceT.findByService(serviceT);
-			logger.info("LISTE DES DETAILS SERVICE OU TYPE DE SERVICE " + listDetailServices);
-		} catch (Exception e) {
-			logger.warn(e.getMessage());
-			throw new Exception(e.getMessage());
-		}
-		logger.info("GET DETAIL SERVICE  [OUT]  : " + listDetailServices);
-		return new ResponseDto(listDetailServices);
-	}
-
-
 
 	@Operation(summary = "BPM ***Create a transaction ")
 	@PostMapping(value = "/marketing", produces = { "application/json" })
@@ -185,11 +158,6 @@ public class MauritelApi {
 		return new ResponseDto(responseRechargeDto);
 	}
 
-
-	
-	
-	
-	
 	@Operation(summary = "BPM ** List Of All Amounts ")
 	@GetMapping(value = "/amounts", produces = { "application/json" })
 	public ResponseDto getListAmounts() throws Exception {
@@ -199,9 +167,9 @@ public class MauritelApi {
 		// TEST API key
 
 		// TEST IP AUTHPORIZED
-		List<Double> listAmounts=null;
+		List<Double> listAmounts = null;
 		try {
-		    listAmounts = amountService.findAllActifAmounts();
+			listAmounts = amountService.findAllActifAmounts();
 			responseDto.setResponse(listAmounts);
 			responseDto.setMessage("SUCCESS ");
 		} catch (Exception e) {
@@ -209,7 +177,7 @@ public class MauritelApi {
 			throw new Exception(e.getMessage());
 		}
 		// responseDto.setResponse(listDetailServices);
-		logger.info("LIST OF AMOUNTS  [OUT]   : " +listAmounts);
+		logger.info("LIST OF AMOUNTS  [OUT]   : " + listAmounts);
 		return responseDto;
 	}
 
@@ -219,6 +187,7 @@ public class MauritelApi {
 			throws Exception {
 
 		// TEST IP AUTHPORIZED
+		// TEST API key
 		if (!securityService.checkIP(httpServletRequest.getRemoteHost())) {
 			throw new Exception("IP ADRESS NOT ALLOWED");
 		}
@@ -229,7 +198,6 @@ public class MauritelApi {
 		if (rechargeClassiqueDto == null) {
 			throw new Exception("Les Informations sur le formulaire sont vides");
 		}
-		// TEST API key
 
 		ServiceT serviceT = null;
 		try {
@@ -289,36 +257,56 @@ public class MauritelApi {
 		logger.info("RECHARGE CLASSIQUE [OUT] : " + responseRechargeDto);
 		return new ResponseDto(responseRechargeDto);
 	}
+
 	
+	@GetMapping(value = "/services", produces = { "application/json" })
+	public ResponseDto getServicesByAmount(@RequestParam(name = "language", required = true) int language,
+			@RequestParam(name = "amount", required = true) Long amount) throws Exception {
 
-	@GetMapping(value ="/services", produces = {"application/json"})
-	public ResponseDto getServicesByAmount(@RequestParam(name ="language", required = true) String language,
-			@RequestParam(name ="amount", required = true) Long amount
-		)throws Exception {
-		
-		 // TEST API KEY
-		 // TEST IP AUTHPORIZED
+		// TEST API KEY
+		// TEST IP AUTHPORIZED
 
-	    ResponseDto responseDto=new ResponseDto();
-	        
-		logger.info("GET DETAIL SERVICE BY AMOUNT [IN]   : AMOUNT " +   amount);
-		logger.info("GET DETAIL SERVICE BY AMOUNT [IN]   : LANGUAGE " + language);
-		  
-		Set<Detail> listdetaDetails =new HashSet<>();
+		ResponseDto responseDto = new ResponseDto();
+
+		logger.info("GET DETAIL SERVICE BY AMOUNT [IN]   : AMOUNT  : " + amount);
+		logger.info("GET DETAIL SERVICE BY AMOUNT [IN]   : LANGUAGE  : " + language);
+
+		Set<Detail> listdetailDetails = new HashSet<>();
 		try {
-		listdetaDetails	=amountService.findByAmount(amount.doubleValue()).getDetail();
-		} catch (Exception e) {
+			
+			if(language==0) {
+				listdetailDetails = amountService.findByAmount(amount.doubleValue()).getDetail();
+			}else if(language==1) {
+				
+			}else if(language==2) {
+				
+			}
+			
+		}catch (Exception e) {
 			// TODO: handle exception
 			logger.info(e.getMessage());
+			responseDto.setResponse(listdetailDetails);
+			responseDto.setCodeError(1);
+			responseDto.setMessage("THERE ARE NO SERVICES RELATED TO : " + amount);
+			return responseDto;
 		}
-		
-		List<ResponseDetail> listr=ResponseHelper.getDetailResponse(listdetaDetails);
-		ListServiceBankily  listServiceBankily=new ListServiceBankily(listr);
+
+		List<ResponseService> listr = ResponseHelper.getDetailResponse(listdetailDetails);
+		ListServices listServices = new ListServices(listr);
 		responseDto.setMessage("SUCCES");
-		responseDto.setResponse(listServiceBankily);
+		responseDto.setCodeError(0);
+		responseDto.setResponse(listServices);
 		logger.info("GET DETAIL SERVICE BY AMOUNT [OUT]   : " + responseDto);
 		return responseDto;
 	}
 	
 	
+	@Operation(summary = "GET PURE FROM MAURITEL")
+	@GetMapping(value = "/marketingService", produces = { "application/json" })
+	public @ResponseBody ResponseDto getAllPureMargetingService() throws Exception {
+		List<ServiceDto> listServiceDtos=rechargeService.getMarketingServices();
+		return new ResponseDto(listServiceDtos);
+	}
+	
+
 }

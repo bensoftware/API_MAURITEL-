@@ -8,11 +8,14 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
 import com.bpm.apimauritel.entities.Detail;
+import com.bpm.apimauritel.entities.DetailService;
 import com.bpm.apimauritel.repositories.ServiceMauritelRepository;
 import com.bpm.apimauritel.services.AmountService;
 import com.bpm.apimauritel.services.CashDataService;
 import com.bpm.apimauritel.services.CashService;
 import com.bpm.apimauritel.services.DetailServiceData;
+import com.bpm.apimauritel.services.DetailServiceServiceT;
+import com.bpm.apimauritel.services.RechargeService;
 import com.bpm.apimauritel.services.ServiceMauritelService;
 
 @Component
@@ -35,6 +38,13 @@ public class TestMain implements CommandLineRunner {
 
 	@Autowired
 	CashDataService cashDataService;
+	
+	@Autowired
+	DetailServiceServiceT detailServiceServiceT;
+	
+	
+	@Autowired
+	RechargeService rechargeService;
 
 	public static void main(String[] args) throws Exception {
 		// TODO Auto-generated method stub
@@ -105,10 +115,17 @@ public class TestMain implements CommandLineRunner {
 
 	//System.err.println(""+detailServiceData.findAllDetailServices());
 		
-Set<Detail> listdetaDetails	=	amountService.findByAmount(10D).getDetail();
-
-
-//System.err.println("Amount" +detailServiceData.findDetailByAmount(3719));
+//Set<Detail> listdetaDetails	=	amountService.findByAmount(10D).getDetail();
+//
+//
+//  List<DetailService> detailServiceService=detailServiceServiceT.findAllDetailService();
+//  
+//  
+//  for (DetailService detailService : detailServiceService) {
+//	System.err.println(" : " + detailService.getDescription());
+//}
+		
+//System.err.println("SERVICES : " + rechargeService.getMarketingServices());
 
 
 

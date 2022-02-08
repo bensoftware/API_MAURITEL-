@@ -26,7 +26,5 @@ public class ServiceDto implements Serializable {
 		super();
 		// TODO Auto-generated constructor stub
 	}
-	
-	
-	
+
 }

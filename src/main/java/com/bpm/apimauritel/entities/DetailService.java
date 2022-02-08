@@ -27,9 +27,9 @@ public class DetailService implements Serializable {
 	private String amount;
 	private String description;
     private boolean activated;
+    
 	@ToString.Exclude
 	@ManyToOne
-	
 	@Cascade(CascadeType.SAVE_UPDATE)
 	@JsonIgnore
 	private ServiceT service;

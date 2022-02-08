@@ -65,7 +65,6 @@ public class ProcessingServiceImpl implements ProcessingService {
 		for (DetailService detailService : listDetailServices) {
 			listAmounts.add(Double.valueOf(detailService.getAmount()));
 		}
-
 		return listAmounts;
 	}
 

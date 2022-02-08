@@ -4,7 +4,7 @@ import java.io.Serializable;
 import lombok.Data;
 
 @Data
-public class ResponseDetail implements Serializable {
+public class ResponseService implements Serializable {
 	/**
 	 * 
 	 */
@@ -15,7 +15,7 @@ public class ResponseDetail implements Serializable {
 	private String validite;
 	private String description;
 	
-	public ResponseDetail(String bundleId, String libelle, String validite, String description) {
+	public ResponseService(String bundleId, String libelle, String validite, String description) {
 		super();
 		this.bundleId = bundleId;
 		this.libelle = libelle;

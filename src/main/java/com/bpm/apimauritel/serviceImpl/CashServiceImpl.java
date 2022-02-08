@@ -8,10 +8,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.bpm.apimauritel.dtos.ServiceDto;
-import com.bpm.apimauritel.entities.Amount;
-import com.bpm.apimauritel.entities.Detail;
 import com.bpm.apimauritel.entities.DetailService;
-import com.bpm.apimauritel.entities.ServiceMauritel;
 import com.bpm.apimauritel.entities.ServiceT;
 import com.bpm.apimauritel.helpers.CashHelper;
 import com.bpm.apimauritel.services.AmountService;
@@ -35,11 +32,11 @@ public class CashServiceImpl implements CashService {
 	@Autowired
 	DetailServiceServiceT detailServiceServiceT;
 
-	List<ServiceDto> listServiceFromMauritel;
+	List<ServiceDto> listServicesFromMauritel;
 
 	@Autowired
 	ServiceMauritelService serviceMauritelService;
-	
+
 	@Autowired
 	AmountService amountService;
 
@@ -48,11 +45,11 @@ public class CashServiceImpl implements CashService {
 
 		ServiceT serviceT = null;
 
-		listServiceFromMauritel = rechargeService.getMarketingServices();
+		listServicesFromMauritel = rechargeService.getMarketingServices();
 
 		Hashtable<String, String> serviceSaved = new Hashtable<>();
 
-		for (ServiceDto serviceDto : listServiceFromMauritel) {
+		for (ServiceDto serviceDto : listServicesFromMauritel) {
 			// CodeService == au code unique qui identifie un service venant de l'API
 			// MAURITEL
 			if (!serviceSaved.contains(serviceDto.getService())) {
@@ -87,7 +84,7 @@ public class CashServiceImpl implements CashService {
 	@Override
 	public void saveDetailService(ServiceT serviceT) throws Exception {
 		DetailService detailService = null;
-		for (ServiceDto serviceDto : listServiceFromMauritel) {
+		for (ServiceDto serviceDto : listServicesFromMauritel) {
 			// System.err.println("");
 			if (serviceDto.getService().equalsIgnoreCase(serviceT.getCodeService())) {
 				detailService = new DetailService();
@@ -125,40 +122,61 @@ public class CashServiceImpl implements CashService {
 		// Getting keySet() into Set
 		Set<String> setOfServiceCodeService = serviceLoop.keySet();
 
-		listServiceFromMauritel = rechargeService.getMarketingServices();
+		listServicesFromMauritel = rechargeService.getMarketingServices();
 
 		ServiceT serviceTForUpdate = null;
 
 		// Mise à Jour
-		if (listServicesFromDatabase.size() == listServiceFromMauritel.size()
-				|| listServiceFromMauritel.size() > listServicesFromDatabase.size()) {
+		if (listServicesFromDatabase.size() == listServicesFromMauritel.size()
+				|| listServicesFromMauritel.size() > listServicesFromDatabase.size()) {
 			// Save And Update
-		} else if (listServicesFromDatabase.size() > listServiceFromMauritel.size()) {
+			this.saveService();
+		} else if (listServicesFromDatabase.size() > listServicesFromMauritel.size()) {
 			// Blocage du service au niveau de la base de donnée Local si le service
 			// n'existe plus chez MAURITEL
 			this.deActivateService();
 		}
+		//
+		List<DetailService> listDetailServicesFromDatabase = detailServiceServiceT.findAllDetailService();
+		
 	}
 
 	private void deActivateService() throws Exception {
 		List<ServiceT> listServicesFromDatabase = serviceService.getAllServices();
 		// Verifier si un Service dans la base de donnée existe chez MAURITEL.
-		listServiceFromMauritel = rechargeService.getMarketingServices();
+		listServicesFromMauritel = rechargeService.getMarketingServices();
 		Hashtable<String, ServiceDto> HtableFromMauritel = CashHelper
-				.listToHashTableServiceDto(listServiceFromMauritel);
-		
+				.listToHashTableServiceDto(listServicesFromMauritel);
+
 		Hashtable<String, ServiceT> serviceLoop = CashHelper.listToHashTableServiceT(listServicesFromDatabase);
-		
+
 		for (ServiceT serviceT : listServicesFromDatabase) {
-			if (!HtableFromMauritel.contains(serviceT.getCodeService())) {
+			if(!HtableFromMauritel.contains(serviceT.getCodeService())) {
 				ServiceT serviceUPDATE = serviceLoop.get(serviceT.getCodeService());
 				serviceUPDATE.setNotActivated(false);
 				serviceService.save(serviceUPDATE);
 			}
 		}
+		 // Si le service est activé,il faut aussi s'assurer que le Detail Service est
+		// present ou pas.
+	   // Afin de le Descativer ou Pas.
 	}
-
+	
 	
 
+	private void deActivateDetailService() throws Exception {
+		
+		List<DetailService> listDetailServicesFromDatabase = detailServiceServiceT.findAllDetailService();
+		
+		Hashtable<String,ServiceDto>  listServiceDto= CashHelper.listToHashTableServiceDtoDesciption(rechargeService.getMarketingServices());
+		
+		for (DetailService detailService : listDetailServicesFromDatabase) {	
+			if(listServiceDto.containsKey(detailService.getDescription())){
+				detailService.setActivated(false);
+				detailServiceServiceT.save(detailService);
+			}
+		}
+		
+	}
 
 }

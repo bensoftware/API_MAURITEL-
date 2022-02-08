@@ -26,6 +26,8 @@ public interface DetailServiceServiceT {
 	
 	public  List<DetailService>  findAllDetailService() throws Exception;
 	
+	//public List<DetailService> findAllDetailService() throws Exception;
+	
 	
 	
 }
