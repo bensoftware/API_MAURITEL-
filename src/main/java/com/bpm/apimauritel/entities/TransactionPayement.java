@@ -2,14 +2,15 @@ package com.bpm.apimauritel.entities;
 
 import java.io.Serializable;
 import java.util.Date;
+
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.validation.constraints.NotNull;
-import org.hibernate.annotations.Cascade;
-import org.hibernate.annotations.CascadeType;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
@@ -25,26 +26,27 @@ public class TransactionPayement implements Serializable {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	@Id
 	private Long id;
-	
+
 	@ToString.Exclude
 	@ManyToOne
 	@NotNull
-	@Cascade(CascadeType.SAVE_UPDATE)
 	@JsonIgnore
 	ServiceMauritel service;
-	//private ServiceT service;
-	private String 	sender;
-    private String 	receiver;
-    private double 	amountPay;
-    private String 	statusPayement;
-    private String 	transactionId;
-    private String 	errorMessage;
-    private Date   	transactionDate;
-    private boolean success;
-    private String  typeRecharge;
-    private Date dateRequest;
-    private String transactionStatus;
-    
-  
-    
+	
+	private String sender;
+	@Column(length = 30)
+	private String receiver;
+	private double amountPay;
+	@Column(length = 2)
+	private String statusPayement;
+	@Column(length = 30)
+	private String transactionId;
+	@Lob
+	private String errorMessage;
+	private Date transactionDate;
+	private boolean success;
+	private String typeRecharge;
+	private Date dateRequest;
+	private String transactionStatus;
+
 }

@@ -2,7 +2,7 @@ package com.bpm.apimauritel.services;
 
 import java.util.List;
 import java.util.Set;
-import com.bpm.apimauritel.dtos.RechargeClassiqueDto;
+import com.bpm.apimauritel.dtos.Recharge;
 import com.bpm.apimauritel.dtos.RechargeMarketingDto;
 import com.bpm.apimauritel.dtos.ResponseRechargeDto;
 import com.bpm.apimauritel.dtos.ServiceDto;
@@ -15,7 +15,7 @@ public interface RechargeService {
 
 	public TokenDto authentication() throws Exception;
 
-	public ResponseRechargeDto rechargeClassique(RechargeClassiqueDto rechargeClassiqueDto ) throws Exception;
+	public ResponseRechargeDto rechargeClassique(Recharge recharge ) throws Exception;
 	
 	public ResponseRechargeDto rechargeParServiceMarketing(RechargeMarketingDto rechargeMarketingDto) throws Exception;
 	

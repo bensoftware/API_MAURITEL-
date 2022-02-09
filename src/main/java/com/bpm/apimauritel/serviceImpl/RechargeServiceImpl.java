@@ -18,7 +18,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
-import com.bpm.apimauritel.dtos.RechargeClassiqueDto;
+import com.bpm.apimauritel.dtos.Recharge;
 import com.bpm.apimauritel.dtos.RechargeMarketingDto;
 import com.bpm.apimauritel.dtos.ResponseRechargeDto;
 import com.bpm.apimauritel.dtos.ServiceDto;
@@ -196,7 +196,7 @@ public class RechargeServiceImpl implements RechargeService {
 
 	
 	@Override
-	public ResponseRechargeDto rechargeClassique(RechargeClassiqueDto rechargeClassiqueDto) throws Exception {
+	public ResponseRechargeDto rechargeClassique(Recharge recharge) throws Exception {
 
 		// Disponibilité du service
 		if (this.checkStatus().equals(Message.MAURITEL_SERVER_DOWN)) {
@@ -223,7 +223,7 @@ public class RechargeServiceImpl implements RechargeService {
 		HttpHeaders headers = RechargeServiceHelper.getHeaders(this.token);
 		HttpEntity<String> entete = new HttpEntity<>(headers);
 
-		String URL = host + "/bm/api/recharge/?sender="+rechargeClassiqueDto.getSender()+"&receiver="+rechargeClassiqueDto.getReceiver()+"&amount="+rechargeClassiqueDto.getAmount();
+		String URL = host + "/bm/api/recharge/?sender="+recharge.getSender()+"&receiver="+recharge.getReceiver()+"&amount="+recharge.getAmount();
 		
 		try {
 			logger.info("GLOBAL URL --- :  " + URL);

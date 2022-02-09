@@ -28,7 +28,7 @@ public class ServiceMauritel implements Serializable {
 	@Id
 	private Long id;
 	private String codeService; // Libelle
-	private String codeOperation;// Bundle
+	private String codeOperation;// BundleId
 	private boolean actif;
 
 	@OneToMany(mappedBy = "serviceMauritel", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)

@@ -37,7 +37,6 @@ public class ApiMauritelApplication implements ApplicationRunner {
 	@Autowired
 	ProcessingService processingService;
 	
-	
 	@Autowired
 	ServiceMauritelService serviceServiceMauritelService;
 	

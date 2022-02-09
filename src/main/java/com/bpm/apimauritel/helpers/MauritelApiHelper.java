@@ -7,7 +7,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-import com.bpm.apimauritel.dtos.RechargeClassiqueDto;
+import com.bpm.apimauritel.dtos.Recharge;
 import com.bpm.apimauritel.dtos.RechargeMarketingDto;
 
 
@@ -123,20 +123,20 @@ public class MauritelApiHelper {
 	
 	
 
-	public static void checkRechargeClassique(RechargeClassiqueDto rechargeClassiqueDto) {
+	public static void checkRechargeClassique(Recharge recharge) {
 		List<String> listValidatorErrors = new ArrayList<>();
 
 		// Amount
-		if (rechargeClassiqueDto.getAmount().isEmpty() || rechargeClassiqueDto.getAmount() == null) {
+		if (recharge.getAmount().isEmpty() || recharge.getAmount() == null) {
              
 		}
 		
 		//
-		if(rechargeClassiqueDto.getReceiver().isEmpty() || rechargeClassiqueDto.getReceiver() == null) {
+		if(recharge.getReceiver().isEmpty() || recharge.getReceiver() == null) {
             
 		}
 		
-        if(rechargeClassiqueDto.getSender().isEmpty() || rechargeClassiqueDto.getSender()== null) {
+        if(recharge.getSender().isEmpty() || recharge.getSender()== null) {
             
 		}
 	}

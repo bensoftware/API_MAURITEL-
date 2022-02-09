@@ -39,6 +39,5 @@ public class ServiceHelper {
 			}
 		}
 		return listServicesEn;
-
 	}
 }

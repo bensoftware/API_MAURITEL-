@@ -5,7 +5,7 @@ import java.util.HashMap;
 import java.util.Map;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
-import com.bpm.apimauritel.dtos.RechargeClassiqueDto;
+import com.bpm.apimauritel.dtos.Recharge;
 import com.bpm.apimauritel.dtos.RechargeMarketingDto;
 import com.bpm.apimauritel.dtos.TokenDto;
 import com.bpm.apimauritel.entities.TransactionPayement;
@@ -30,12 +30,12 @@ public class RechargeServiceHelper {
 		return params;
 	}
 
-	public static Map<String, String> getParamettersRechargeClassique(RechargeClassiqueDto rechargeClassiqueDto) {
+	public static Map<String, String> getParamettersRechargeClassique(Recharge recharge) {
 		// TODO Auto-generated method stub
 		Map<String, String> params = new HashMap();
-		params.put("sender", rechargeClassiqueDto.getSender());
-		params.put("receiver", rechargeClassiqueDto.getReceiver());
-		params.put("amount", rechargeClassiqueDto.getAmount());
+		params.put("sender", recharge.getSender());
+		params.put("receiver", recharge.getReceiver());
+		params.put("amount", recharge.getAmount());
 		return params;
 	}
 
@@ -53,16 +53,16 @@ public class RechargeServiceHelper {
 		return transactionPayement;
 	}
 
-	public static TransactionPayement bindClassicTransactionPayement(RechargeClassiqueDto rechargeClassiqueDto,
+	public static TransactionPayement bindClassicTransactionPayement(Recharge recharge,
 			String typeRecharge) {
 		TransactionPayement transactionPayement = new TransactionPayement();
 		// transactionPayement.setAmountPay(Double.parseDouble(rechargeMarketingDto.getAmount()));
 		transactionPayement.setTypeRecharge(typeRecharge);
-		transactionPayement.setAmountPay(Double.parseDouble(rechargeClassiqueDto.getAmount()));
+		transactionPayement.setAmountPay(Double.parseDouble(recharge.getAmount()));
 		transactionPayement.setDateRequest(new Date());
-		transactionPayement.setTransactionId(rechargeClassiqueDto.getBundleId());
-		transactionPayement.setSender(rechargeClassiqueDto.getSender());
-		transactionPayement.setReceiver(rechargeClassiqueDto.getReceiver());
+		transactionPayement.setTransactionId(recharge.getBundleId());
+		transactionPayement.setSender(recharge.getSender());
+		transactionPayement.setReceiver(recharge.getReceiver());
 		return transactionPayement;
 	}
 
