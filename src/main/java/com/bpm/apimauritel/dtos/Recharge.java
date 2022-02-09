@@ -20,9 +20,14 @@ public class Recharge {
 
 	@Schema(description = "Amount to be sent.", example = "350", required = true)
 	private String amount;
-
-	@Schema(description = "idTransction or bundleId generated in MOBILE app.", example = "350", required = true)
+	//
+	@Schema(description = "bundleId =codeService.", example = "350", required = true)
 	private String bundleId;
-
+	//
+	@Schema(description = "idTransction generated in MOBILE app.", example = "350", required = true)
+    private String idTransction;
+	
+	//service
 	private String codeService;
+
 }

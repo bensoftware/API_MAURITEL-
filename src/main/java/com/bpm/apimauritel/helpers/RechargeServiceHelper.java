@@ -39,17 +39,17 @@ public class RechargeServiceHelper {
 		return params;
 	}
 
-	public static TransactionPayement bindTransactionPayement(RechargeMarketingDto rechargeMarketingDto,
+	public static TransactionPayement bindTransactionPayement(Recharge recharge,
 			String typeRecharge) {
 
 		TransactionPayement transactionPayement = new TransactionPayement();
 		// transactionPayement.setAmountPay(Double.parseDouble(rechargeMarketingDto.getAmount()));
-		transactionPayement.setTypeRecharge("MARKETING");
-		transactionPayement.setAmountPay(Double.parseDouble(rechargeMarketingDto.getAmount()));
-		transactionPayement.setTransactionDate(new Date());
-		transactionPayement.setTransactionId(rechargeMarketingDto.getIdTransction());
-		transactionPayement.setSender(rechargeMarketingDto.getSender());
-		transactionPayement.setReceiver(rechargeMarketingDto.getReceiver());
+		transactionPayement.setTypeRecharge(typeRecharge);
+		transactionPayement.setAmountPay(Double.parseDouble(recharge.getAmount()));
+		transactionPayement.setDateRequest(new Date());
+		transactionPayement.setTransactionId(recharge.getIdTransction());
+		transactionPayement.setSender(recharge.getSender());
+		transactionPayement.setReceiver(recharge.getReceiver());
 		return transactionPayement;
 	}
 
@@ -60,10 +60,25 @@ public class RechargeServiceHelper {
 		transactionPayement.setTypeRecharge(typeRecharge);
 		transactionPayement.setAmountPay(Double.parseDouble(recharge.getAmount()));
 		transactionPayement.setDateRequest(new Date());
-		transactionPayement.setTransactionId(recharge.getBundleId());
+		transactionPayement.setTransactionId(recharge.getIdTransction());
 		transactionPayement.setSender(recharge.getSender());
 		transactionPayement.setReceiver(recharge.getReceiver());
 		return transactionPayement;
 	}
+	
+	
+	public static RechargeMarketingDto BindRequestMarketingDto (Recharge recharge) {
+
+		RechargeMarketingDto rechargeMarketingDto=new RechargeMarketingDto();
+		
+		rechargeMarketingDto.setAmount(recharge.getAmount());
+		rechargeMarketingDto.setCodeService(recharge.getCodeService());
+		rechargeMarketingDto.setIdTransction(recharge.getIdTransction());
+		rechargeMarketingDto.setReceiver(recharge.getReceiver());
+		rechargeMarketingDto.setSender(recharge.getSender());
+		rechargeMarketingDto.setService(recharge.getBundleId());
+		return rechargeMarketingDto;
+	}
+	
 
 }
