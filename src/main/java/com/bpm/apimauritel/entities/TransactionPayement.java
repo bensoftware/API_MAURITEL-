@@ -2,13 +2,11 @@ package com.bpm.apimauritel.entities;
 
 import java.io.Serializable;
 import java.util.Date;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.validation.constraints.NotNull;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -32,7 +30,7 @@ public class TransactionPayement implements Serializable {
 	@NotNull
 	@JsonIgnore
 	ServiceMauritel service;
-	
+
 	private String sender;
 	@Column(length = 30)
 	private String receiver;
@@ -41,7 +39,7 @@ public class TransactionPayement implements Serializable {
 	private String statusPayement;
 	@Column(length = 30)
 	private String transactionId;
-	@Lob
+	@Column(columnDefinition = "TEXT")
 	private String errorMessage;
 	private Date transactionDate;
 	private boolean success;

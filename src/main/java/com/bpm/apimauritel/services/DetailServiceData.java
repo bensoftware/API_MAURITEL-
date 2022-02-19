@@ -13,5 +13,5 @@ public interface DetailServiceData {
 	
 	public List<Detail> findAllDetailServices() throws Exception;
 	
-	public Detail findDetailByAmount(long id);
+	public Detail findDetailByAmount(long id) throws Exception;
 }

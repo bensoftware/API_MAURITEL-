@@ -16,7 +16,7 @@ import com.bpm.apimauritel.services.ServiceMauritelService;
 import com.bpm.apimauritel.services.ServiceService;
 
 @SpringBootApplication
-@ComponentScan(basePackages = {"com.bpm.apimauritel"})
+@ComponentScan(basePackages ={"com.bpm.apimauritel"})
 public class ApiMauritelApplication implements ApplicationRunner {
 
 	@Autowired

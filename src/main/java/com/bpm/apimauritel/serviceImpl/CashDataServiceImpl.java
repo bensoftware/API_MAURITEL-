@@ -16,6 +16,7 @@ import com.bpm.apimauritel.services.DetailServiceData;
 import com.bpm.apimauritel.services.ServiceMauritelService;
 import com.bpm.apimauritel.services.ServiceService;
 
+
 @Service
 public class CashDataServiceImpl implements CashDataService {
 
@@ -52,7 +53,7 @@ public class CashDataServiceImpl implements CashDataService {
 				serviceMauritel.setCodeOperation(serviceT.getCodeOperation());
 				serviceMauritel.setCodeService(serviceT.getCodeService());
 				serviceMauritel = serviceMauritelService.save(serviceMauritel);
-			} else if(serviceMauritel!=null) {
+			}else if(serviceMauritel!=null) {
 				// UPDATE
 				serviceMauritel.setActif(true);
 				serviceMauritel.setCodeOperation(serviceT.getCodeOperation());
@@ -117,7 +118,6 @@ public class CashDataServiceImpl implements CashDataService {
 			detailServiceData.saveAll(listDetails);
 			listDetails.clear();
 		}
-
 	}
 
 }

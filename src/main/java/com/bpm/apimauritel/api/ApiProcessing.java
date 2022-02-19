@@ -6,10 +6,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.web.bind.annotation.RequestBody;
 import com.bpm.apimauritel.dtos.Recharge;
 import com.bpm.apimauritel.dtos.RechargeMarketingDto;
-import com.bpm.apimauritel.dtos.ResponseDto;
 import com.bpm.apimauritel.dtos.ResponseRechargeDto;
 import com.bpm.apimauritel.entities.ServiceMauritel;
 import com.bpm.apimauritel.entities.TransactionPayement;
@@ -27,21 +25,21 @@ public class ApiProcessing {
 	private final Logger logger = LoggerFactory.getLogger(ApiProcessing.class);
 
 	@Autowired
-	ServiceMauritelService serviceMauritelService;
+	private ServiceMauritelService serviceMauritelService;
 
 	@Autowired
-	TransactionPayementService transactionPayementService;
+	private TransactionPayementService transactionPayementService;
 
 	@Autowired
-	RechargeService rechargeService;
+	private RechargeService rechargeService;
 
 	@Autowired
-	TraitementService traitementService;
+	private TraitementService traitementService;
 
 	@Autowired
-	SecurityService securityService;
+	private SecurityService securityService;
 
-	public ResponseRechargeDto RechargeMargetingService(Recharge recharge) throws Exception {
+	public ResponseRechargeDto RechargeMargetingService(@Valid Recharge recharge) throws Exception {
 
 		ResponseRechargeDto responseRechargeDto = new ResponseRechargeDto();
 		logger.info("RECHARGE MARKETING SERVICE [IN]  : " + recharge);
@@ -65,37 +63,34 @@ public class ApiProcessing {
 		}
 
 		TransactionPayement transactionPayement = RechargeServiceHelper.bindTransactionPayement(recharge, "MARKETING");
-		transactionPayement.setStatusPayement("TA");
+		transactionPayement.setTransactionStatus("TA");
 		transactionPayement.setService(serviceMauritel);
-	
-		// PERSISTANCE
-	    transactionPayement = transactionPayementService.save(transactionPayement);
+		transactionPayement.setDateRequest(new Date());
 
-		System.err.println("IN SERVICET        : " + serviceMauritel);
+		// PERSISTANCE
+		transactionPayement = transactionPayementService.save(transactionPayement);
 
 		RechargeMarketingDto rechargeMarketingDto = RechargeServiceHelper.BindRequestMarketingDto(recharge);
-		
+
 		try {
 			responseRechargeDto = rechargeService.rechargeParServiceMarketing(rechargeMarketingDto);
-
 		} catch (Exception e) {
-			// TODO: handle exception
-			// TODO: handle exception
 			logger.info(" " + e.getMessage());
-			if(e!=null) {
-				responseRechargeDto.setMessage(e.getMessage());		
-			}
+			traitementService.responseException();
+			responseRechargeDto.setMessage(e.getMessage());
 			responseRechargeDto.setSuccess(false);
+			transactionPayement.setTransactionStatus("TF");
+			transactionPayement.setTransactionDate(new Date());
+			transactionPayementService.save(transactionPayement);
 			return responseRechargeDto;
 		}
-		
+
 		try {
 			System.err.println("IN PAYEMENT    : " + transactionPayement);
 			if (responseRechargeDto.isSuccess()) {
 				transactionPayement.setTransactionStatus("TS");
 				transactionPayement.setSuccess(true);
 				transactionPayement.setTransactionDate(new Date());
-			//	transactionPayement.setTransactionId(recharge.getIdTransction());
 				transactionPayementService.save(transactionPayement);
 			} else {
 				transactionPayement.setErrorMessage(responseRechargeDto.getMessage());
@@ -104,18 +99,16 @@ public class ApiProcessing {
 				transactionPayementService.save(transactionPayement);
 			}
 		} catch (Exception e) {
+			System.err.println("EXCEPTION ERREUR  : " + e.getMessage());
 			traitementService.responseException();
 			transactionPayement.setId(transactionPayement.getId());
 			transactionPayement.setTransactionStatus("TF");
 			transactionPayement.setTransactionDate(new Date());
 			transactionPayement.setErrorMessage(e.getMessage());
-		//	transactionPayement.setTransactionId(recharge.getIdTransction());
-			// transactionPayement.setService(serviceMauritel);
+			transactionPayement.setTransactionId(recharge.getIdTransction());
 			transactionPayementService.upadte(transactionPayement);
-			logger.info("EXCEPTION : " + e.getMessage());
-			if(e!=null) {
-				responseRechargeDto.setMessage(""+e.getMessage());
-			}
+			logger.info("EXCEPTION  : " + e.getMessage());
+			responseRechargeDto.setMessage("" + e.getMessage());
 			responseRechargeDto.setSuccess(false);
 			return responseRechargeDto;
 		}
@@ -124,10 +117,10 @@ public class ApiProcessing {
 	}
 
 	
-	public ResponseRechargeDto  rechargeClassique(@Valid @RequestBody Recharge recharge) throws Exception {
+	public ResponseRechargeDto rechargeClassique(@Valid Recharge recharge) throws Exception {
 
 		ResponseRechargeDto responseRechargeDto = new ResponseRechargeDto();
-		
+
 		logger.info("RECHARGE CLASSIQUE [IN] : " + recharge);
 
 		if (recharge == null) {
@@ -142,13 +135,12 @@ public class ApiProcessing {
 			// Check exception
 			traitementService.responseException();
 			logger.error(" EXCEPTION  : " + e.getMessage());
-			responseRechargeDto.setMessage(""+e.getMessage());
+			responseRechargeDto.setMessage("" + e.getMessage());
 			responseRechargeDto.setSuccess(false);
 			return responseRechargeDto;
 		}
-
 		TransactionPayement transactionPayement = null;
-		transactionPayement = RechargeServiceHelper.bindClassicTransactionPayement(recharge,"CLASSIQUE");
+		transactionPayement = RechargeServiceHelper.bindClassicTransactionPayement(recharge, "CLASSIQUE");
 		transactionPayement.setTransactionStatus("TA");
 		transactionPayement.setService(serviceMauritel);
 		transactionPayement.setTransactionId(recharge.getIdTransction());
@@ -172,7 +164,7 @@ public class ApiProcessing {
 			// transactionPayement.setService(serviceMauritel);
 			transactionPayementService.upadte(transactionPayement);
 			logger.info("EXCEPTION  : " + e.getMessage());
-			responseRechargeDto.setMessage(""+e.getMessage());
+			responseRechargeDto.setMessage("" + e.getMessage());
 			responseRechargeDto.setSuccess(false);
 			return responseRechargeDto;
 		}
@@ -195,10 +187,13 @@ public class ApiProcessing {
 				transactionPayement.setErrorMessage(responseRechargeDto.getMessage());
 				transactionPayementService.save(transactionPayement);
 			}
-		}catch (Exception e){
+		} catch (Exception e) {
 			// Check exception
 			traitementService.responseException();
 			logger.info(e.getMessage());
+			transactionPayement.setTransactionStatus("TF");
+			transactionPayement.setErrorMessage(e.getMessage());
+			transactionPayementService.save(transactionPayement);
 			responseRechargeDto.setMessage(" " + e.getMessage());
 			responseRechargeDto.setSuccess(false);
 		}

@@ -133,7 +133,9 @@ public class MauritelApi {
 		}
 
 		ResponseRechargeDto responseRecharge=null;
-		if(recharge.getCodeService().equals("100")) {
+		
+		String codeService=recharge.getCodeService();
+		if(codeService.equals("100")) {
 			responseRecharge=apiProcessing.rechargeClassique(recharge);
 		}else{
 			try {

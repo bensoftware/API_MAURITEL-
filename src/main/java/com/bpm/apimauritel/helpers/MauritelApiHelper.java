@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-
 import com.bpm.apimauritel.dtos.Recharge;
 import com.bpm.apimauritel.dtos.RechargeMarketingDto;
 
@@ -16,8 +15,6 @@ public class MauritelApiHelper {
 	
 	
 	public static boolean verificationSuspect(Date exsitant,Long paiement, int minute) {
-
-		
 		Calendar ac= Calendar.getInstance();
 		ac.setTime(exsitant);
 		// incrementation par minute
@@ -34,7 +31,6 @@ public class MauritelApiHelper {
 	
     public static boolean isDetailException(Date dateEx, int minute) {
 
-		
 		Calendar ac= Calendar.getInstance();
 		ac.setTime(dateEx);
 		// Incrementation par minute
@@ -50,19 +46,13 @@ public class MauritelApiHelper {
 	
 	
 	public static String removeSpecialCaracter(String p) {
-		
-		
 		String res="";
-		
 		try {
 		  res= p.replaceAll("\"", "");
 		} catch (Exception e) {
 			// TODO: handle exception
 		}
-		
 		return res;
-		
-		
 	}
 	
 	
@@ -72,12 +62,10 @@ public class MauritelApiHelper {
 		String trestant="";
 		if(size<8) {
 			restant= 8-size;
-			
 			for(int i=0;i<restant;i++) {
 				trestant+="0";
 			}
 		}
-		
 		return trestant+id;
 	}
 	
@@ -108,7 +96,6 @@ public class MauritelApiHelper {
 		} catch (Exception e) {
 			// TODO: handle exception
 		}
-		
 		return doubleAmount;
 	}
 	
@@ -121,8 +108,6 @@ public class MauritelApiHelper {
 	}
 	
 	
-	
-
 	public static void checkRechargeClassique(Recharge recharge) {
 		List<String> listValidatorErrors = new ArrayList<>();
 
@@ -140,6 +125,7 @@ public class MauritelApiHelper {
             
 		}
 	}
+	
 	
 	public static void check(RechargeMarketingDto rechargeMarketingDto) {
 		List<String> listValidatorErrors = new ArrayList<>();

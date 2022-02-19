@@ -3,10 +3,12 @@ package com.bpm.apimauritel.serviceImpl;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.Set;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 import com.bpm.apimauritel.dtos.ServiceDto;
 import com.bpm.apimauritel.entities.DetailService;
 import com.bpm.apimauritel.entities.ServiceT;
@@ -21,24 +23,24 @@ import com.bpm.apimauritel.services.ServiceService;
 @Service
 public class CashServiceImpl implements CashService {
 
-	final Logger logger = LoggerFactory.getLogger(CashServiceImpl.class);
+	private final Logger logger = LoggerFactory.getLogger(CashServiceImpl.class);
 
 	@Autowired
-	ServiceService serviceService;
+	private ServiceService serviceService;
 
 	@Autowired
-	RechargeService rechargeService;
+	private RechargeService rechargeService;
 
 	@Autowired
-	DetailServiceServiceT detailServiceServiceT;
+	private DetailServiceServiceT detailServiceServiceT;
 
-	List<ServiceDto> listServicesFromMauritel;
-
-	@Autowired
-	ServiceMauritelService serviceMauritelService;
+	private List<ServiceDto> listServicesFromMauritel;
 
 	@Autowired
-	AmountService amountService;
+	private ServiceMauritelService serviceMauritelService;
+
+	@Autowired
+	private AmountService amountService;
 
 	@Override
 	public void saveService() throws Exception {
@@ -58,7 +60,6 @@ public class CashServiceImpl implements CashService {
 				serviceT.setCodeService(serviceDto.getService());
 				ServiceT service = serviceService.findServiceByCodeService(serviceDto.getService());
 				if (service == null) {
-
 					// Lorsqu'on ne le trouve pas........................: Comment bloquer ?
 
 					// Si ce service n'existe plus dans Mauritel service : Comment le savoir ?
@@ -68,7 +69,6 @@ public class CashServiceImpl implements CashService {
 
 					// Est ce que ce qui est dans la base de donnée correspond à ce qui viens de
 					// Mauritel.
-
 					serviceT = serviceService.save(serviceT);
 					saveDetailService(serviceT);
 				} else {
@@ -136,9 +136,7 @@ public class CashServiceImpl implements CashService {
 			// n'existe plus chez MAURITEL
 			this.deActivateService();
 		}
-		//
 		List<DetailService> listDetailServicesFromDatabase = detailServiceServiceT.findAllDetailService();
-		
 	}
 
 	private void deActivateService() throws Exception {
@@ -151,32 +149,30 @@ public class CashServiceImpl implements CashService {
 		Hashtable<String, ServiceT> serviceLoop = CashHelper.listToHashTableServiceT(listServicesFromDatabase);
 
 		for (ServiceT serviceT : listServicesFromDatabase) {
-			if(!HtableFromMauritel.contains(serviceT.getCodeService())) {
+			if (!HtableFromMauritel.contains(serviceT.getCodeService())) {
 				ServiceT serviceUPDATE = serviceLoop.get(serviceT.getCodeService());
 				serviceUPDATE.setNotActivated(false);
 				serviceService.save(serviceUPDATE);
 			}
 		}
-		 // Si le service est activé,il faut aussi s'assurer que le Detail Service est
+		// Si le service est activé,il faut aussi s'assurer que le Detail Service est
 		// present ou pas.
-	   // Afin de le Descativer ou Pas.
+		// Afin de le Descativer ou Pas.
 	}
-	
-	
 
 	private void deActivateDetailService() throws Exception {
-		
+
 		List<DetailService> listDetailServicesFromDatabase = detailServiceServiceT.findAllDetailService();
-		
-		Hashtable<String,ServiceDto>  listServiceDto= CashHelper.listToHashTableServiceDtoDesciption(rechargeService.getMarketingServices());
-		
-		for (DetailService detailService : listDetailServicesFromDatabase) {	
-			if(listServiceDto.containsKey(detailService.getDescription())){
+
+		Hashtable<String, ServiceDto> listServiceDto = CashHelper
+				.listToHashTableServiceDtoDesciption(rechargeService.getMarketingServices());
+
+		for (DetailService detailService : listDetailServicesFromDatabase) {
+			if (listServiceDto.containsKey(detailService.getDescription())) {
 				detailService.setActivated(false);
 				detailServiceServiceT.save(detailService);
 			}
 		}
-		
 	}
 
 }
