@@ -1,12 +1,10 @@
 package com.bpm.apimauritel.api;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import javax.servlet.http.HttpServletRequest;
-import javax.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,18 +20,13 @@ import org.springframework.web.bind.annotation.RestController;
 import com.bpm.apimauritel.dtos.ListAmounts;
 import com.bpm.apimauritel.dtos.ListServices;
 import com.bpm.apimauritel.dtos.Recharge;
-import com.bpm.apimauritel.dtos.RechargeMarketingDto;
 import com.bpm.apimauritel.dtos.ResponseDto;
 import com.bpm.apimauritel.dtos.ResponseRechargeDto;
 import com.bpm.apimauritel.dtos.ResponseService;
 import com.bpm.apimauritel.dtos.ServiceDto;
 import com.bpm.apimauritel.entities.Detail;
-import com.bpm.apimauritel.entities.ServiceMauritel;
 import com.bpm.apimauritel.entities.ServiceT;
-import com.bpm.apimauritel.entities.TransactionPayement;
-import com.bpm.apimauritel.helpers.RechargeServiceHelper;
 import com.bpm.apimauritel.helpers.ResponseHelper;
-import com.bpm.apimauritel.messages.Message;
 import com.bpm.apimauritel.services.AmountService;
 import com.bpm.apimauritel.services.DetailServiceServiceT;
 import com.bpm.apimauritel.services.ProcessingService;
@@ -44,7 +37,6 @@ import com.bpm.apimauritel.services.ServiceService;
 import com.bpm.apimauritel.services.TraitementService;
 import com.bpm.apimauritel.services.TransactionPayementService;
 import io.swagger.v3.oas.annotations.Operation;
-
 
 @RestController
 @RequestMapping("/api/V1")
@@ -91,10 +83,8 @@ public class MauritelApi {
 		return "MAURITEL API is UP...V1";
 	}
 
-	
-	
 	@Operation(summary = "BPM ***GET ALL SERVICES ")
-	@GetMapping(value = "/marketingServices", produces ={"application/json"})
+	@GetMapping(value = "/marketingServices", produces = { "application/json" })
 	public @ResponseBody ResponseDto getAllMargetingService() throws Exception {
 		List<ServiceT> listServiceT = new ArrayList<>();
 
@@ -114,11 +104,8 @@ public class MauritelApi {
 		return new ResponseDto(listServiceT);
 	}
 
-	
-
-	
 	@Operation(summary = "BPM RECHARGE MARTKETING AND CLASSIQUE ")
-	@PostMapping(value = "/recharge", produces={"application/json"})
+	@PostMapping(value = "/recharge", produces = { "application/json" })
 	public ResponseRechargeDto RechargeService(@RequestBody Recharge recharge) throws Exception {
 
 		// Test IP AUTHPORIZED
@@ -132,14 +119,14 @@ public class MauritelApi {
 			throw new Exception("LES INFORMATIONS SUR LE FORMULAIRE SONT VIDES !!!");
 		}
 
-		ResponseRechargeDto responseRecharge=null;
-		
-		String codeService=recharge.getCodeService();
-		if(codeService.equals("100")) {
-			responseRecharge=apiProcessing.rechargeClassique(recharge);
-		}else{
+		ResponseRechargeDto responseRecharge = null;
+
+		String codeService = recharge.getCodeService();
+		if (codeService.equals("100")) {
+			responseRecharge = apiProcessing.rechargeClassique(recharge);
+		} else {
 			try {
-				responseRecharge=apiProcessing.RechargeMargetingService(recharge);
+				responseRecharge = apiProcessing.RechargeMargetingService(recharge);
 			} catch (Exception e) {
 				// TODO: handle exception
 				logger.info(" " + e.getMessage());
@@ -149,14 +136,13 @@ public class MauritelApi {
 		return responseRecharge;
 	}
 
-
 	@Operation(summary = "BPM ** List Of All Amounts ")
-	@GetMapping(value="/amounts", produces={"application/json"})
+	@GetMapping(value = "/amounts", produces = { "application/json" })
 	public ResponseDto getListAmounts() throws Exception {
 		ResponseDto responseDto = new ResponseDto();
 		logger.info("LIST OF AMOUNTS [IN]    : ");
-		
-		 // TEST API key
+
+		// TEST API key
 		// TEST IP AUTHPORIZED
 		List<Double> listAmounts = null;
 		try {
@@ -172,14 +158,13 @@ public class MauritelApi {
 		logger.info("LIST OF AMOUNTS  [OUT]   : " + listAmounts);
 		return responseDto;
 	}
-	
-	
+
 	@GetMapping(value = "/services", produces = { "application/json" })
 	public ResponseDto getServicesByAmount(@RequestParam(name = "language", required = true) int language,
 			@RequestParam(name = "amount", required = true) Long amount) throws Exception {
 
 		// TEST IP AUTHPORIZED
-		if (!securityService.checkIP(httpServletRequest.getRemoteHost())){
+		if (!securityService.checkIP(httpServletRequest.getRemoteHost())) {
 			throw new Exception("IP ADRESS NOT ALLOWED");
 		}
 
@@ -208,13 +193,11 @@ public class MauritelApi {
 		return responseDto;
 	}
 	
-	
-	@Operation(summary = "GET PURE FROM MAURITEL")
+	@Operation(summary = "GET PURE DATA FROM MAURITEL")
 	@GetMapping(value = "/marketingService", produces = { "application/json" })
 	public @ResponseBody ResponseDto getAllPureMargetingService() throws Exception {
 		List<ServiceDto> listServiceDtos = rechargeService.getMarketingServices();
 		return new ResponseDto(listServiceDtos);
 	}
 
-	
 }

@@ -3,12 +3,10 @@ package com.bpm.apimauritel.serviceImpl;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.Set;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import com.bpm.apimauritel.dtos.ServiceDto;
 import com.bpm.apimauritel.entities.DetailService;
 import com.bpm.apimauritel.entities.ServiceT;
@@ -98,7 +96,6 @@ public class CashServiceImpl implements CashService {
 						// On insert le DetailService pour ce service,serviceT.
 						detailServiceServiceT.save(detailService);
 					} else {
-						// On insert le DetailService pour ce service.
 						// Mise à jour des informations modifiées.
 						detailService.setAmount(serviceDto.getAmount());
 						detailService.setDescription(serviceDto.getDescription());
@@ -121,7 +118,6 @@ public class CashServiceImpl implements CashService {
 		Hashtable<String, ServiceT> serviceLoop = CashHelper.listToHashTableServiceT(listServicesFromDatabase);
 		// Getting keySet() into Set
 		Set<String> setOfServiceCodeService = serviceLoop.keySet();
-
 		listServicesFromMauritel = rechargeService.getMarketingServices();
 
 		ServiceT serviceTForUpdate = null;
@@ -139,6 +135,8 @@ public class CashServiceImpl implements CashService {
 		List<DetailService> listDetailServicesFromDatabase = detailServiceServiceT.findAllDetailService();
 	}
 
+	
+	
 	private void deActivateService() throws Exception {
 		List<ServiceT> listServicesFromDatabase = serviceService.getAllServices();
 		// Verifier si un Service dans la base de donnée existe chez MAURITEL.
@@ -155,18 +153,14 @@ public class CashServiceImpl implements CashService {
 				serviceService.save(serviceUPDATE);
 			}
 		}
-		// Si le service est activé,il faut aussi s'assurer que le Detail Service est
-		// present ou pas.
+		// Si le service est activé,il faut aussi s'assurer que le Detail Service est present ou pas.
 		// Afin de le Descativer ou Pas.
 	}
 
 	private void deActivateDetailService() throws Exception {
-
 		List<DetailService> listDetailServicesFromDatabase = detailServiceServiceT.findAllDetailService();
-
 		Hashtable<String, ServiceDto> listServiceDto = CashHelper
 				.listToHashTableServiceDtoDesciption(rechargeService.getMarketingServices());
-
 		for (DetailService detailService : listDetailServicesFromDatabase) {
 			if (listServiceDto.containsKey(detailService.getDescription())) {
 				detailService.setActivated(false);

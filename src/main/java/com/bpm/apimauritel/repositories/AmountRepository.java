@@ -12,8 +12,7 @@ public interface AmountRepository extends JpaRepository<Amount, Long> {
 	@Query("select u from Amount u where u.actif=true ")
 	public List<Amount> findAllActifAmounts();
 	
-	
-	
+
 	public  Amount findByAmount(double amount);
 
 }
